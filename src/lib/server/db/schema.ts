@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, integer } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const categories = pgTable('categories', {
@@ -6,6 +6,7 @@ export const categories = pgTable('categories', {
 	name: text('name').notNull(),
 	slug: text('slug').notNull().unique(),
 	color: text('color'),
+	order: integer('order').notNull().default(0),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
@@ -14,6 +15,7 @@ export const tools = pgTable('tools', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
 	description: text('description'),
+	url: text('url').notNull(),
 	categoryId: uuid('category_id').references(() => categories.id, { onDelete: 'set null' }),
 	logoUrl: text('logo_url'),
 	createdAt: timestamp('created_at').defaultNow().notNull(),

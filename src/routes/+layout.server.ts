@@ -1,0 +1,20 @@
+import type { LayoutServerLoad } from './$types';
+import { db } from '$lib/server/db';
+import { categories, tools } from '$lib/server/db/schema';
+import { eq, sql, asc } from 'drizzle-orm';
+
+export const load: LayoutServerLoad = async () => {
+	const allCategories = await db
+		.select({
+			id: categories.id,
+			name: categories.name,
+			slug: categories.slug,
+			toolCount: sql<number>`count(${tools.id})`.as('tool_count')
+		})
+		.from(categories)
+		.leftJoin(tools, eq(categories.id, tools.categoryId))
+		.groupBy(categories.id, categories.name, categories.slug)
+		.orderBy(asc(categories.order));
+
+	return { categories: allCategories };
+};
