@@ -35,7 +35,8 @@ export const load: PageServerLoad = async () => {
 
 export const actions: Actions = {
 	addTool: async ({ request, locals }) => {
-		if (!locals.user) {
+		const session = await locals.getSession();
+		if (!session?.user) {
 			return fail(401, { error: 'Unauthorized' });
 		}
 
@@ -86,7 +87,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 	deleteTool: async ({ request, locals }) => {
-		if (!locals.user) {
+		const session = await locals.getSession();
+		if (!session?.user) {
 			return fail(401, { error: 'Unauthorized' });
 		}
 
@@ -115,7 +117,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 	editTool: async ({ request, locals }) => {
-		if (!locals.user) {
+		const session = await locals.getSession();
+		if (!session?.user) {
 			return fail(401, { error: 'Unauthorized' });
 		}
 
