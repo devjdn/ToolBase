@@ -25,7 +25,7 @@
 			<ul class="grid grid-cols-2 gap-3 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5">
 				{#each data.tools as tool (tool.id)}
 					<li>
-						<ToolCard {tool} showCategory />
+						<ToolCard {tool} data={data.editForm} showCategory />
 					</li>
 				{/each}
 			</ul>

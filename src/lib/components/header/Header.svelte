@@ -10,6 +10,7 @@
 	import { useSidebar } from '../ui/sidebar';
 	import { PanelLeft, LogIn, LogOut, Moon, Sun, Laptop } from '@lucide/svelte';
 	import { mode, setMode } from 'mode-watcher';
+	import { page } from '$app/state';
 
 	let { categories }: { categories: LayoutData['categories'] } = $props();
 
@@ -21,14 +22,16 @@
 
 	const { toggle } = useSidebar();
 
-	// async function signInWithGithub() {
-	// 	await authClient.signIn.social({
-	// 		provider: 'github'
-	// 	});
-	// }
+	async function signInWithGithub() {
+		await authClient.signIn.social({
+			provider: 'github'
+		});
+	}
 </script>
 
-<header class="grid h-10 grid-cols-3 items-center gap-4 border-b px-3">
+<header
+	class="sticky top-0 z-50 grid h-10 grid-cols-3 items-center gap-4 border-b bg-background/60 px-3 backdrop-blur-sm backdrop-saturate-100"
+>
 	<div class="flex items-center justify-start gap-1.5">
 		<Button variant="ghost" size="icon-sm" onclick={toggle}>
 			<PanelLeft />
@@ -39,14 +42,21 @@
 	</div>
 
 	<div class="col-start-3 flex items-center justify-end gap-1.5">
-		<AddToolDialog {categories}>
-			{#snippet trigger(props)}
-				<Button {...props}>
-					<PlusIcon />
-					<span>Add Tool</span>
-				</Button>
-			{/snippet}
-		</AddToolDialog>
+		{#if $session.data}
+			<AddToolDialog data={page.data.addForm} {categories}>
+				{#snippet trigger(props)}
+					<Button {...props}>
+						<PlusIcon />
+						<span>Add Tool</span>
+					</Button>
+				{/snippet}
+			</AddToolDialog>
+		{:else}
+			<Button disabled>
+				<PlusIcon />
+				<span>Add Tool</span>
+			</Button>
+		{/if}
 
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
@@ -102,13 +112,9 @@
 				{:else}
 					<DropdownMenu.Label>Account</DropdownMenu.Label>
 					<DropdownMenu.Group>
-						<DropdownMenu.Item>
-							{#snippet child({ props })}
-								<a {...props} href="/demo/better-auth/login">
-									<LogIn />
-									<span>Sign In with Github</span>
-								</a>
-							{/snippet}
+						<DropdownMenu.Item onclick={signInWithGithub}>
+							<LogIn />
+							<span>Sign In with Github</span>
 						</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				{/if}

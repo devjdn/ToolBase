@@ -1,23 +1,40 @@
 <script lang="ts">
 	import * as Dialog from '../ui/dialog/index';
 	import { Input } from '../ui/input/index';
-	import { Label } from '../ui/label/index';
 	import { Textarea } from '../ui/textarea/index';
-	import { enhance } from '$app/forms';
+	import { Button } from '../ui/button/index';
+	import * as Form from '../ui/form/index';
 	import type { LayoutData } from '../../../routes/$types';
 	import type { Snippet } from 'svelte';
-	import { Button } from '../ui/button/index';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
+	import { superForm } from 'sveltekit-superforms';
+	import type { SuperValidated } from 'sveltekit-superforms';
+	import { addToolSchema, type AddToolSchema } from '$lib/zod-schemas';
+	import { Label } from '../ui/label/index';
 
 	let {
 		categories,
-		trigger
+		trigger,
+		data
 	}: {
 		categories: LayoutData['categories'];
 		trigger: Snippet<[Record<string, unknown>]>;
+		data: SuperValidated<AddToolSchema>;
 	} = $props();
 
-	let loading = $state(false);
 	let open = $state(false);
+
+	// svelte-ignore state_referenced_locally
+	const form = superForm(data, {
+		validators: zod4Client(addToolSchema),
+		onResult: ({ result }) => {
+			if (result.type === 'success') {
+				open = false;
+			}
+		}
+	});
+
+	const { form: formData, enhance, submitting } = form;
 </script>
 
 <Dialog.Root bind:open>
@@ -34,66 +51,73 @@
 			>
 		</Dialog.Header>
 
-		<form
-			method="POST"
-			action="/?/addTool"
-			enctype="multipart/form-data"
-			use:enhance={() => {
-				loading = true;
-
-				return async ({ result, update }) => {
-					loading = false;
-					if (result.type === 'success') {
-						open = false;
-						await update();
-					} else {
-						await update();
-					}
-				};
-			}}
-		>
+		<form method="POST" action="/?/addTool" enctype="multipart/form-data" use:enhance>
 			<div class="flex flex-col gap-3 py-3">
+				<Form.Field {form} name="name">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label>Name</Form.Label>
+							<Input {...props} bind:value={$formData.name} placeholder="SvelteKit" required />
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
+				<Form.Field {form} name="url">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label>URL</Form.Label>
+							<Input
+								{...props}
+								bind:value={$formData.url}
+								type="url"
+								placeholder="https://svelte.dev/docs/kit"
+								required
+							/>
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
+				<Form.Field {form} name="description">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label>
+								Description <span class="text-xs text-muted-foreground">(optional)</span>
+							</Form.Label>
+							<Textarea
+								{...props}
+								bind:value={$formData.description}
+								placeholder="A brief description..."
+								class="resize-none"
+								rows={3}
+							/>
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
+				<Form.Field {form} name="categoryId">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label for="categoryId">Category</Form.Label>
+							<select
+								required
+								bind:value={$formData.categoryId}
+								{...props}
+								class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+							>
+								<option value="" disabled selected>Select a category</option>
+								{#each categories as category (category.id)}
+									<option value={category.id}>{category.name}</option>
+								{/each}
+							</select>
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
 				<div class="flex flex-col gap-1.5">
-					<Label for="name">Name</Label>
-					<Input id="name" name="name" placeholder="SvelteKit" required />
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="url">URL</Label>
-					<Input id="url" name="url" type="url" placeholder="https://svelte.dev/docs/kit" required />
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="description">Description <span class="text-xs text-muted-foreground">(optional)</span></Label>
-					<Textarea
-						id="description"
-						name="description"
-						placeholder="A brief description..."
-						class="resize-none"
-						rows={3}
-					/>
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="categoryId">Category</Label>
-					<select
-						id="categoryId"
-						name="categoryId"
-						required
-						class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-					>
-						<option value="" disabled selected>Select a category</option>
-						{#each categories as category (category.id)}
-							<option value={category.id}>{category.name}</option>
-						{/each}
-					</select>
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="logo">Logo <span class="text-xs text-muted-foreground">(optional)</span></Label>
-					<Input id="logo" name="logo" type="file" accept="image/webp,image/svg+xml" />
+					<Label class="text-sm font-medium">Logo <span class="text-xs text-muted-foreground">(optional)</span></Label>
+					<Input name="logo" type="file" accept="image/webp,image/svg+xml" />
 				</div>
 			</div>
 			<Dialog.Footer>
 				<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
-				<Button type="submit" disabled={loading}>
-					{loading ? 'Adding...' : 'Add Tool'}
+				<Button type="submit" disabled={$submitting}>
+					{$submitting ? 'Adding...' : 'Add Tool'}
 				</Button>
 			</Dialog.Footer>
 		</form>

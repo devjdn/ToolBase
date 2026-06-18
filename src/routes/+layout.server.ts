@@ -2,6 +2,9 @@ import type { LayoutServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { categories, tools } from '$lib/server/db/schema';
 import { eq, sql, asc } from 'drizzle-orm';
+import { superValidate } from 'sveltekit-superforms';
+import { zod4 } from 'sveltekit-superforms/adapters';
+import { addToolSchema, editToolSchema } from '$lib/zod-schemas';
 
 export const load: LayoutServerLoad = async () => {
 	const allCategories = await db
@@ -16,5 +19,9 @@ export const load: LayoutServerLoad = async () => {
 		.groupBy(categories.id, categories.name, categories.slug)
 		.orderBy(asc(categories.order));
 
-	return { categories: allCategories };
+	return {
+		categories: allCategories,
+		addForm: await superValidate(zod4(addToolSchema)),
+		editForm: await superValidate(zod4(editToolSchema))
+	};
 };

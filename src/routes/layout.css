@@ -81,7 +81,7 @@
 :root {
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.145 0 0);
-	--card: oklch(1 0 0);
+	--card: oklch(0.98 0 0);
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.145 0 0);
@@ -201,4 +201,26 @@
 	html {
 		@apply font-sans;
 	}
+}
+
+@keyframes progress {
+	0% {
+		width: 0%;
+	}
+	50% {
+		width: 70%;
+	}
+	75% {
+		width: 82%;
+	}
+	90% {
+		width: 90%;
+	}
+	100% {
+		width: 93%;
+	}
+}
+
+.animate-progress {
+	animation: progress 2s ease-out forwards;
 }

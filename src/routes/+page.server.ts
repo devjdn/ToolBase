@@ -3,15 +3,10 @@ import { tools, categories } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import { supabase } from '$lib/server/supabase';
-
-const addToolSchema = z.object({
-	name: z.string(),
-	url: z.url('Must be a valid HTTPS URL'),
-	description: z.string().max(255).optional(),
-	categoryId: z.uuid('Please select a category')
-});
+import { addToolSchema, editToolSchema } from '$lib/zod-schemas';
 
 export const load: PageServerLoad = async () => {
 	const allTools = await db
@@ -30,7 +25,9 @@ export const load: PageServerLoad = async () => {
 		.from(tools)
 		.leftJoin(categories, eq(tools.categoryId, categories.id));
 
-	return { tools: allTools };
+	return {
+		tools: allTools
+	};
 };
 
 export const actions: Actions = {
@@ -42,17 +39,10 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 
-		const result = addToolSchema.safeParse({
-			name: formData.get('name'),
-			url: formData.get('url'),
-			description: formData.get('description') || undefined,
-			categoryId: formData.get('categoryId')
-		});
+		const form = await superValidate(formData, zod4(addToolSchema));
 
-		if (!result.success) {
-			const { fieldErrors } = z.flattenError(result.error);
-
-			return fail(400, { error: fieldErrors });
+		if (!form.valid) {
+			return fail(400, { form });
 		}
 
 		const logoFile = formData.get('logo') as File | null;
@@ -68,7 +58,7 @@ export const actions: Actions = {
 			});
 
 			if (error) {
-				return fail(500, { error: 'Failed to upload logo' });
+				return fail(500, { form, error: 'Failed to upload logo' });
 			}
 
 			const { data } = supabase.storage.from('ToolBase Images').getPublicUrl(fileName);
@@ -77,14 +67,14 @@ export const actions: Actions = {
 		}
 
 		await db.insert(tools).values({
-			name: result.data.name,
-			url: result.data.url,
-			description: result.data.description ?? null,
-			categoryId: result.data.categoryId,
+			name: form.data.name,
+			url: form.data.url,
+			description: form.data.description ?? null,
+			categoryId: form.data.categoryId,
 			logoUrl
 		});
 
-		return { success: true };
+		return { form };
 	},
 	deleteTool: async ({ request, locals }) => {
 		const session = await locals.getSession();
@@ -124,20 +114,13 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 
-		const result = addToolSchema.extend({ id: z.uuid() }).safeParse({
-			id: formData.get('id'),
-			name: formData.get('name'),
-			url: formData.get('url'),
-			description: formData.get('description') || undefined,
-			categoryId: formData.get('categoryId')
-		});
+		const form = await superValidate(formData, zod4(editToolSchema));
 
-		if (!result.success) {
-			const { fieldErrors } = z.flattenError(result.error);
-			return fail(400, { error: fieldErrors });
+		if (!form.valid) {
+			return fail(400, { form });
 		}
 
-		const existing = await db.select().from(tools).where(eq(tools.id, result.data.id)).limit(1);
+		const existing = await db.select().from(tools).where(eq(tools.id, form.data.id)).limit(1);
 		if (!existing.length) {
 			return fail(404, { error: 'Tool not found in ToolBase' });
 		}
@@ -155,7 +138,7 @@ export const actions: Actions = {
 			});
 
 			if (error) {
-				return fail(500, { error: error.message });
+				return fail(500, { form, error: error.message });
 			}
 
 			if (existing[0].logoUrl) {
@@ -173,14 +156,14 @@ export const actions: Actions = {
 		await db
 			.update(tools)
 			.set({
-				name: result.data.name,
-				url: result.data.url,
-				description: result.data.description ?? null,
-				categoryId: result.data.categoryId,
+				name: form.data.name,
+				url: form.data.url,
+				description: form.data.description ?? null,
+				categoryId: form.data.categoryId,
 				logoUrl
 			})
-			.where(eq(tools.id, result.data.id));
+			.where(eq(tools.id, form.data.id));
 
-		return { success: true };
+		return { form };
 	}
 };

@@ -3,21 +3,51 @@
 	import { Input } from '../ui/input/index';
 	import { Label } from '../ui/label/index';
 	import { Textarea } from '../ui/textarea/index';
-	import { enhance } from '$app/forms';
-	import type { Tool } from '$lib/types';
 	import { Button } from '../ui/button/index';
+	import * as Form from '../ui/form/index';
 	import { Pencil } from '@lucide/svelte';
 	import { page } from '$app/state';
+	import { superForm } from 'sveltekit-superforms';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
+	import type { SuperValidated } from 'sveltekit-superforms';
+	import { editToolSchema, type EditToolSchema } from '$lib/zod-schemas';
+	import type { Tool } from '$lib/types';
 
 	let {
-		tool
+		tool,
+		data
 	}: {
 		tool: Tool;
+		data: SuperValidated<EditToolSchema>;
 	} = $props();
 
 	let open = $state(false);
 
-	let loading = $state(false);
+	// svelte-ignore state_referenced_locally
+	const form = superForm(data, {
+		validators: zod4Client(editToolSchema),
+		onResult: ({ result }) => {
+			if (result.type === 'success') {
+				open = false;
+			}
+		}
+	});
+
+	$effect(() => {
+		if (open && tool.id) {
+			form.reset({
+				data: {
+					id: tool.id,
+					name: tool.name,
+					url: tool.url,
+					description: tool.description ?? '',
+					categoryId: tool.category?.id ?? ''
+				}
+			});
+		}
+	});
+
+	const { form: formData, enhance, submitting } = form;
 </script>
 
 <Dialog.Root bind:open>
@@ -34,56 +64,55 @@
 			<Dialog.Title>Edit Tool</Dialog.Title>
 			<Dialog.Description>Update the details for {tool.name}.</Dialog.Description>
 		</Dialog.Header>
-		<form
-			method="POST"
-			action="/?/editTool"
-			enctype="multipart/form-data"
-			use:enhance={() => {
-				loading = true;
-				return async ({ result, update }) => {
-					loading = false;
-					if (result.type === 'success') {
-						open = false;
-						await update();
-					} else {
-						await update();
-					}
-				};
-			}}
-		>
+		<form method="POST" action="/?/editTool" enctype="multipart/form-data" use:enhance>
 			<input type="hidden" name="id" value={tool.id} />
 			<div class="flex flex-col gap-3 py-3">
+				<Form.Field {form} name="name">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label>Name</Form.Label>
+							<Input {...props} bind:value={$formData.name} required />
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
+				<Form.Field {form} name="url">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label>URL</Form.Label>
+							<Input {...props} bind:value={$formData.url} type="url" required />
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
+				<Form.Field {form} name="description">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label>
+								Description <span class="text-xs text-muted-foreground">(optional)</span>
+							</Form.Label>
+							<Textarea {...props} bind:value={$formData.description} class="resize-none" rows={3} />
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
+				<Form.Field {form} name="categoryId">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Form.Label>Category</Form.Label>
+							<select
+								required
+								bind:value={$formData.categoryId}
+								{...props}
+								class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+							>
+								{#each page.data.categories as category (category.id)}
+									<option value={category.id}>{category.name}</option>
+								{/each}
+							</select>
+						{/snippet}
+					</Form.Control>
+				</Form.Field>
 				<div class="flex flex-col gap-1.5">
-					<Label for="name">Name</Label>
-					<Input id="name" name="name" value={tool.name} required />
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="url">URL</Label>
-					<Input id="url" name="url" type="url" value={tool.url} required />
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="description">Description <span class="text-xs text-muted-foreground">(optional)</span></Label>
-					<Textarea id="description" name="description" value={tool.description ?? ''} class="resize-none" rows={3} />
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="categoryId">Category</Label>
-					<select
-						id="categoryId"
-						name="categoryId"
-						required
-						value={tool.category?.id}
-						class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-					>
-						{#each page.data.categories as category (category.id)}
-							<option value={category.id}>{category.name}</option>
-						{/each}
-					</select>
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="logo"
-						>Logo <span class="text-xs text-muted-foreground">(optional — replaces existing)</span></Label
-					>
-					<Input id="logo" name="logo" type="file" accept="image/webp,image/svg+xml" />
+					<Label>Logo <span class="text-xs text-muted-foreground">(optional — replaces existing)</span></Label>
+					<Input name="logo" type="file" accept="image/webp,image/svg+xml" />
 					{#if tool.logoUrl}
 						<p class="text-xs text-muted-foreground">A logo is already set. Only upload if you want to replace it.</p>
 					{/if}
@@ -91,8 +120,8 @@
 			</div>
 			<Dialog.Footer>
 				<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
-				<Button type="submit" disabled={loading}>
-					{loading ? 'Saving...' : 'Save Changes'}
+				<Button type="submit" disabled={$submitting}>
+					{$submitting ? 'Saving...' : 'Save Changes'}
 				</Button>
 			</Dialog.Footer>
 		</form>

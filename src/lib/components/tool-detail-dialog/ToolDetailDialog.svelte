@@ -7,13 +7,17 @@
 	import { scale } from 'svelte/transition';
 	import DeleteToolButton from '../delete-tool/DeleteToolButton.svelte';
 	import EditToolDialog from '../edit-tool/EditToolDialog.svelte';
+	import type { EditToolSchema } from '$lib/zod-schemas';
+	import type { SuperValidated } from 'sveltekit-superforms';
 
 	let {
 		tool,
-		trigger
+		trigger,
+		data
 	}: {
 		tool: Tool;
 		trigger: Snippet<[Record<string, unknown>]>;
+		data: SuperValidated<EditToolSchema>;
 	} = $props();
 
 	let open = $state(false);
@@ -59,7 +63,7 @@
 									out:scale={{ duration: 200 }}
 									class="absolute inset-0 flex items-center justify-center gap-2"
 								>
-									<Check />
+									<Check class="stroke-green-600 dark:stroke-green-400" />
 									<span>Copied!</span>
 								</div>
 							{:else}
@@ -75,7 +79,7 @@
 						</div>
 					</Button>
 
-					<EditToolDialog {tool} />
+					<EditToolDialog {tool} {data} />
 
 					<DeleteToolButton {tool} {open} />
 				</div>

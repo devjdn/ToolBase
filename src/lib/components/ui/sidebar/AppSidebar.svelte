@@ -4,6 +4,8 @@
 	import { categoryIcons, defaultIcon } from '$lib/categoryIcons';
 	import type { LayoutData } from '../../../../routes/$types';
 	import { page } from '$app/state';
+	import clsx from 'clsx';
+	import { Signpost, UserRoundPen } from '@lucide/svelte';
 
 	let {
 		ref = $bindable(null),
@@ -26,12 +28,43 @@
 									<a {...props} href="/category/{category.slug}">
 										<Icon size={16} />
 										<span>{category.name}</span>
-										<span class="ml-auto text-xs text-neutral-400 tabular-nums">{category.toolCount}</span>
+										<span
+											class={clsx('ml-auto text-xs text-neutral-400 tabular-nums', {
+												'text-white dark:text-black': page.url.pathname === `/category/${category.slug}`
+											})}>{category.toolCount}</span
+										>
 									</a>
 								{/snippet}
 							</Sidebar.MenuButton>
 						</Sidebar.MenuItem>
 					{/each}
+				</Sidebar.Menu>
+			</Sidebar.GroupContent>
+		</Sidebar.Group>
+		<Sidebar.Group>
+			<Sidebar.GroupLabel>Using ToolBase</Sidebar.GroupLabel>
+			<Sidebar.GroupContent>
+				<Sidebar.Menu>
+					<Sidebar.MenuItem>
+						<Sidebar.MenuButton variant={page.url.pathname === `/guide` ? 'primary' : 'ghost'}>
+							{#snippet child({ props })}
+								<a href="/guide" {...props}>
+									<Signpost size={16} />
+									<span>Usage Guide</span>
+								</a>
+							{/snippet}
+						</Sidebar.MenuButton>
+					</Sidebar.MenuItem>
+					<Sidebar.MenuItem>
+						<Sidebar.MenuButton variant={page.url.pathname === `/request-to-edit` ? 'primary' : 'ghost'}>
+							{#snippet child({ props })}
+								<a href="/request-to-edit" {...props}>
+									<UserRoundPen size={16} />
+									<span>Request to Edit</span>
+								</a>
+							{/snippet}
+						</Sidebar.MenuButton>
+					</Sidebar.MenuItem>
 				</Sidebar.Menu>
 			</Sidebar.GroupContent>
 		</Sidebar.Group>
