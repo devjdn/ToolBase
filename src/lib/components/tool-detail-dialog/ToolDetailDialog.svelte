@@ -9,6 +9,7 @@
 	import EditToolDialog from '../edit-tool/EditToolDialog.svelte';
 	import type { EditToolSchema } from '$lib/zod-schemas';
 	import type { SuperValidated } from 'sveltekit-superforms';
+	import { page } from '$app/state';
 
 	let {
 		tool,
@@ -79,9 +80,10 @@
 						</div>
 					</Button>
 
-					<EditToolDialog {tool} {data} />
-
-					<DeleteToolButton {tool} {open} />
+					{#if page.data.user && ['editor', 'admin'].includes(page.data.user?.role ?? '')}
+						<EditToolDialog {tool} {data} />
+						<DeleteToolButton {tool} {open} />
+					{/if}
 				</div>
 			</div>
 			<!-- implement images here when done, do an if statement as well -->

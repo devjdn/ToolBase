@@ -81,6 +81,9 @@ export const actions: Actions = {
 		if (!session?.user) {
 			return fail(401, { error: 'Unauthorized' });
 		}
+		if (!['editor', 'admin'].includes(session.user.role ?? '')) {
+			return fail(403, { error: 'Forbidden' });
+		}
 
 		const formData = await request.formData();
 		const id = formData.get('id') as string;
@@ -110,6 +113,9 @@ export const actions: Actions = {
 		const session = await locals.getSession();
 		if (!session?.user) {
 			return fail(401, { error: 'Unauthorized' });
+		}
+		if (!['editor', 'admin'].includes(session.user.role ?? '')) {
+			return fail(403, { error: 'Forbidden' });
 		}
 
 		const formData = await request.formData();

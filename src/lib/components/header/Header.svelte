@@ -11,6 +11,7 @@
 	import { PanelLeft, LogIn, LogOut, Moon, Sun, Laptop } from '@lucide/svelte';
 	import { mode, setMode } from 'mode-watcher';
 	import { page } from '$app/state';
+	import { invalidateAll } from '$app/navigation';
 
 	let { categories }: { categories: LayoutData['categories'] } = $props();
 
@@ -18,6 +19,7 @@
 
 	async function signOut() {
 		await authClient.signOut();
+		await invalidateAll();
 	}
 
 	const { toggle } = useSidebar();

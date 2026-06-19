@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>ToolBase / Request to Edit</title>
+	<title>Request to Edit | ToolBase</title>
 </svelte:head>
 
 <div></div>

@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>ToolBase / {data.category.name}</title>
+	<title>{data.category.name} | ToolBase</title>
 	<meta name="description" content="A collection of tools for {data.category.name}" />
 </svelte:head>
 

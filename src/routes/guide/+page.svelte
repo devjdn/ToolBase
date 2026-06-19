@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>ToolBase / Usage Guide</title>
+	<title>Usage Guide | ToolBase</title>
 </svelte:head>
 
 <div class="@container mx-auto flex w-full max-w-4xl flex-1 flex-col space-y-10">

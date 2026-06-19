@@ -4,6 +4,8 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { env } from '$env/dynamic/private';
 import { getRequestEvent } from '$app/server';
 import { db } from '$lib/server/db';
+import { admin as adminPlugin } from 'better-auth/plugins';
+import { ac, user, editor, admin } from '../permissions';
 
 export const auth = betterAuth({
 	baseURL: env.ORIGIN,
@@ -17,6 +19,14 @@ export const auth = betterAuth({
 		}
 	},
 	plugins: [
+		adminPlugin({
+			ac,
+			roles: {
+				user,
+				editor,
+				admin
+			}
+		}),
 		sveltekitCookies(getRequestEvent) // make sure this is the last plugin in the array
 	]
 });

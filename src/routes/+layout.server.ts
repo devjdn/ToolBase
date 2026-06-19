@@ -6,7 +6,9 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { addToolSchema, editToolSchema } from '$lib/zod-schemas';
 
-export const load: LayoutServerLoad = async () => {
+export const load: LayoutServerLoad = async (event) => {
+	const session = await event.locals.getSession();
+
 	const allCategories = await db
 		.select({
 			id: categories.id,
@@ -22,6 +24,7 @@ export const load: LayoutServerLoad = async () => {
 	return {
 		categories: allCategories,
 		addForm: await superValidate(zod4(addToolSchema)),
-		editForm: await superValidate(zod4(editToolSchema))
+		editForm: await superValidate(zod4(editToolSchema)),
+		user: session?.user ?? null
 	};
 };
