@@ -3,6 +3,7 @@
 	import { enhance } from '$app/forms';
 	import { Button } from '$lib/components/ui/button/index';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
+	import { toast } from 'svelte-sonner';
 
 	import type { Tool } from '$lib/types';
 
@@ -34,8 +35,10 @@
 					return async ({ result, update }) => {
 						if (result.type === 'success') {
 							open = false;
+							toast.success(`${tool.name} deleted successfully`);
 							await update();
 						} else {
+							toast.error(`Failed to delete ${tool.name}`);
 							await update();
 						}
 					};

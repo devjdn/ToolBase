@@ -19,10 +19,13 @@
 
 <ToolDetailDialog {tool} {data}>
 	{#snippet trigger(props)}
-		<div {...props} class="flex aspect-9/10 cursor-pointer flex-col justify-start gap-3 rounded-xl border bg-card p-3">
+		<div
+			{...props}
+			class="group flex aspect-9/10 cursor-pointer flex-col justify-start gap-3 rounded-xl bg-card p-3 transition-all hover:bg-accent"
+		>
 			<div class="tool-logo grid aspect-square flex-1 place-items-center">
 				{#if tool.logoUrl}
-					<div class="grid aspect-square h-24 place-items-center rounded-md border bg-white">
+					<div class="grid aspect-square h-24 place-items-center rounded-md dark:bg-white">
 						<img src={tool.logoUrl} alt={tool.name} class="size-18 object-contain" />
 					</div>
 				{:else}
@@ -31,15 +34,19 @@
 			</div>
 			<div class="flex flex-row items-end justify-between gap-3">
 				<div class="min-w-0 flex-1">
-					<p class="text-sm font-book">{tool.name}</p>
+					<p class="font-medium">{tool.name}</p>
 					{#if showCategory && tool.category}
 						<p class="text-xs text-muted-foreground">{tool.category.name}</p>
-					{:else if tool.description}
-						<p class="max-w-full truncate text-xs text-muted-foreground">{tool.description}</p>
 					{/if}
 				</div>
 
-				<Button href={tool.url} target="_blank" size="icon-sm" onclick={(e) => e.stopPropagation()}>
+				<Button
+					href={tool.url}
+					variant="secondary-raised"
+					target="_blank"
+					size="icon-sm"
+					onclick={(e) => e.stopPropagation()}
+				>
 					<span class="sr-only">Open Tool URL</span>
 					<ArrowUpRight />
 				</Button>

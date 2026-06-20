@@ -3,7 +3,7 @@ import { tools, categories } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { supabase } from '$lib/server/supabase';
 import { addToolSchema, editToolSchema } from '$lib/zod-schemas';
@@ -58,7 +58,7 @@ export const actions: Actions = {
 			});
 
 			if (error) {
-				return fail(500, { form, error: 'Failed to upload logo' });
+				return message(form, { type: 'error', text: 'Failed to upload logo' }, { status: 500 });
 			}
 
 			const { data } = supabase.storage.from('ToolBase Images').getPublicUrl(fileName);
@@ -66,15 +66,19 @@ export const actions: Actions = {
 			logoUrl = data.publicUrl;
 		}
 
-		await db.insert(tools).values({
-			name: form.data.name,
-			url: form.data.url,
-			description: form.data.description ?? null,
-			categoryId: form.data.categoryId,
-			logoUrl
-		});
+		try {
+			await db.insert(tools).values({
+				name: form.data.name,
+				url: form.data.url,
+				description: form.data.description ?? null,
+				categoryId: form.data.categoryId,
+				logoUrl
+			});
+		} catch {
+			return message(form, { type: 'error', text: 'Failed to add tool' }, { status: 500 });
+		}
 
-		return { form };
+		return message(form, { type: 'success', text: `${form.data.name} added to ToolBase` });
 	},
 	deleteTool: async ({ request, locals }) => {
 		const session = await locals.getSession();
@@ -144,7 +148,7 @@ export const actions: Actions = {
 			});
 
 			if (error) {
-				return fail(500, { form, error: error.message });
+				return message(form, { type: 'error', text: 'Failed to upload logo' }, { status: 500 });
 			}
 
 			if (existing[0].logoUrl) {
@@ -159,17 +163,21 @@ export const actions: Actions = {
 			logoUrl = data.publicUrl;
 		}
 
-		await db
-			.update(tools)
-			.set({
-				name: form.data.name,
-				url: form.data.url,
-				description: form.data.description ?? null,
-				categoryId: form.data.categoryId,
-				logoUrl
-			})
-			.where(eq(tools.id, form.data.id));
+		try {
+			await db
+				.update(tools)
+				.set({
+					name: form.data.name,
+					url: form.data.url,
+					description: form.data.description ?? null,
+					categoryId: form.data.categoryId,
+					logoUrl
+				})
+				.where(eq(tools.id, form.data.id));
+		} catch {
+			return message(form, { type: 'error', text: 'Failed to update tool' }, { status: 500 });
+		}
 
-		return { form };
+		return message(form, { type: 'success', text: `${form.data.name} updated successfully` });
 	}
 };

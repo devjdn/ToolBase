@@ -8,7 +8,7 @@
 	import type { LayoutData } from '../../../routes/$types';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { useSidebar } from '../ui/sidebar';
-	import { PanelLeft, LogIn, LogOut, Moon, Sun, Laptop } from '@lucide/svelte';
+	import { LogIn, LogOut, Moon, Sun, Laptop, Menu } from '@lucide/svelte';
 	import { mode, setMode } from 'mode-watcher';
 	import { page } from '$app/state';
 	import { invalidateAll } from '$app/navigation';
@@ -32,14 +32,14 @@
 </script>
 
 <header
-	class="sticky top-0 z-50 grid h-10 grid-cols-3 items-center gap-4 border-b bg-background/60 px-3 backdrop-blur-sm backdrop-saturate-100"
+	class="sticky top-0 z-50 grid h-12 grid-cols-3 items-center gap-4 border-b bg-background/90 px-3 backdrop-blur-sm"
 >
 	<div class="flex items-center justify-start gap-1.5">
-		<Button variant="ghost" size="icon-sm" onclick={toggle}>
-			<PanelLeft />
+		<Button variant="ghost" class="md:hidden" size="icon" onclick={toggle}>
+			<Menu />
 		</Button>
 		<a href="/" class="group inline-flex w-fit items-start gap-1">
-			<span class="font-semibold">ToolBase</span>
+			<span class="text-lg font-book">ToolBase</span>
 		</a>
 	</div>
 
@@ -53,11 +53,6 @@
 					</Button>
 				{/snippet}
 			</AddToolDialog>
-		{:else}
-			<Button disabled>
-				<PlusIcon />
-				<span>Add Tool</span>
-			</Button>
 		{/if}
 
 		<DropdownMenu.Root>

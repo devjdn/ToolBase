@@ -7,6 +7,7 @@
 	import { ModeWatcher } from 'mode-watcher';
 	import type { LayoutProps } from './$types';
 	import NavigationIndicator from '$lib/components/navigation-indicator/NavigationIndicator.svelte';
+	import { Toaster } from '$lib/components/ui/sonner/index';
 
 	let { children, data }: LayoutProps = $props();
 </script>
@@ -14,8 +15,9 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <ModeWatcher />
+<Toaster richColors closeButton />
 
-<div class="[--header-height:calc(--spacing(10))]">
+<div class="[--header-height:calc(--spacing(12))]">
 	<NavigationIndicator />
 	<Sidebar.Provider class="flex flex-col">
 		<Header categories={data.categories} />

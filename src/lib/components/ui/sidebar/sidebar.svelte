@@ -1,9 +1,8 @@
 <script lang="ts">
-	import * as Sheet from '$lib/components/ui/sheet/index.js';
 	import { cn, type WithElementRef } from '$lib/utils.js';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import { SIDEBAR_WIDTH_MOBILE } from './constants.js';
 	import { useSidebar } from './context.svelte.js';
+	import * as Drawer from '$lib/components/ui/drawer/index.js';
 
 	let {
 		ref = $bindable(null),
@@ -31,25 +30,23 @@
 		{@render children?.()}
 	</div>
 {:else if sidebar.isMobile}
-	<Sheet.Root bind:open={() => sidebar.openMobile, (v) => sidebar.setOpenMobile(v)} {...restProps}>
-		<Sheet.Content
+	<Drawer.Root bind:open={() => sidebar.openMobile, (v) => sidebar.setOpenMobile(v)} {...restProps} direction="bottom">
+		<Drawer.Content
 			bind:ref
 			data-sidebar="sidebar"
 			data-slot="sidebar"
 			data-mobile="true"
-			class={cn('w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden', className)}
-			style="--sidebar-width: {SIDEBAR_WIDTH_MOBILE};"
-			{side}
+			class={cn('right-0 bottom-0 left-0 flex text-sidebar-foreground [&>button]:hidden', className)}
 		>
-			<Sheet.Header class="sr-only">
-				<Sheet.Title>Sidebar</Sheet.Title>
-				<Sheet.Description>Displays the mobile sidebar.</Sheet.Description>
-			</Sheet.Header>
-			<div class="flex h-full w-full flex-col">
+			<Drawer.Header class="sr-only">
+				<Drawer.Title>Sidebar</Drawer.Title>
+				<Drawer.Description>Displays the mobile sidebar.</Drawer.Description>
+			</Drawer.Header>
+			<div class="flex w-full flex-col overflow-y-auto">
 				{@render children?.()}
 			</div>
-		</Sheet.Content>
-	</Sheet.Root>
+		</Drawer.Content>
+	</Drawer.Root>
 {:else}
 	<div
 		bind:this={ref}
@@ -77,8 +74,8 @@
 			class={cn(
 				'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
 				side === 'left'
-					? 'inset-s-0 group-data-[collapsible=offcanvas]:start-[calc(var(--sidebar-width)*-1)]'
-					: 'inset-e-0 group-data-[collapsible=offcanvas]:end-[calc(var(--sidebar-width)*-1)]',
+					? 'inset-s-0 group-data-[collapsible=offcanvas]:-inset-s-(--sidebar-width)'
+					: 'inset-e-0 group-data-[collapsible=offcanvas]:-inset-e-(--sidebar-width)',
 				// Adjust the padding for floating and inset variants.
 				variant === 'floating' || variant === 'inset'
 					? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]'
@@ -90,7 +87,7 @@
 			<div
 				data-sidebar="sidebar"
 				data-slot="sidebar-inner"
-				class="flex size-full flex-col bg-sidebar group-data-[variant=floating]:rounded-2xl group-data-[variant=floating]:shadow-sm group-data-[variant=floating]:ring-1 group-data-[variant=floating]:ring-sidebar-border"
+				class="flex size-full flex-col bg-sidebar group-data-[variant=floating]:rounded-md group-data-[variant=floating]:shadow-sm group-data-[variant=floating]:ring-1 group-data-[variant=floating]:ring-sidebar-border"
 			>
 				{@render children?.()}
 			</div>

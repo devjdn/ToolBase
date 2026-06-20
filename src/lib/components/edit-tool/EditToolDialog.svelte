@@ -12,6 +12,7 @@
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { editToolSchema, type EditToolSchema } from '$lib/zod-schemas';
 	import type { Tool } from '$lib/types';
+	import { toast } from 'svelte-sonner';
 
 	let {
 		tool,
@@ -26,6 +27,10 @@
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data, {
 		validators: zod4Client(editToolSchema),
+		onUpdated: ({ form }) => {
+			if (form.message?.type === 'success') toast.success(form.message.text);
+			if (form.message?.type === 'error') toast.error(form.message.text);
+		},
 		onResult: ({ result }) => {
 			if (result.type === 'success') {
 				open = false;
