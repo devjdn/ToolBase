@@ -18,6 +18,8 @@
 					'bg-secondary-raised text-secondary-foreground hover:bg-accent-raised hover:text-accent-foreground',
 				destructive:
 					'bg-destructive/10 hover:bg-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 text-destructive focus-visible:border-destructive/40',
+				caution:
+					'bg-caution/10 hover:bg-caution/20 dark:bg-caution/20 dark:hover:bg-caution/30 text-caution focus-visible:border-caution/40',
 				link: 'text-primary underline-offset-4 hover:underline'
 			},
 			size: {

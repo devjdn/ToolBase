@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, integer } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, integer, pgEnum } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const categories = pgTable('categories', {
@@ -11,6 +11,8 @@ export const categories = pgTable('categories', {
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
 
+const statusEnum = pgEnum('status', ['published', 'pending']);
+
 export const tools = pgTable('tools', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
@@ -18,6 +20,7 @@ export const tools = pgTable('tools', {
 	url: text('url').notNull(),
 	categoryId: uuid('category_id').references(() => categories.id, { onDelete: 'set null' }),
 	logoUrl: text('logo_url'),
+	// status: statusEnum(),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });

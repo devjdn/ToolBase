@@ -19,7 +19,8 @@ export const load: PageServerLoad = async () => {
 			category: {
 				id: categories.id,
 				name: categories.name,
-				color: categories.color
+				color: categories.color,
+				slug: categories.slug
 			}
 		})
 		.from(tools)

@@ -12,7 +12,7 @@
 
 <div class="@container mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
 	<section class="category-header">
-		<h1 class="text-[clamp(1.5rem,1.1rem+2vw,2rem)] font-semibold tracking-tight">{data.category.name}</h1>
+		<h1 class="text-[clamp(1.5rem,1.1rem+2vw,2rem)] font-book tracking-tight">{data.category.name}</h1>
 	</section>
 
 	{#if data.tools.length === 0}

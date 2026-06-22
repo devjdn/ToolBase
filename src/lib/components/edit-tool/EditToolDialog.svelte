@@ -58,7 +58,7 @@
 <Dialog.Root bind:open>
 	<Dialog.Trigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="outline" size="lg">
+			<Button {...props} variant="caution" size="lg">
 				<Pencil />
 				<span>Edit</span>
 			</Button>

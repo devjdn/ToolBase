@@ -4,7 +4,7 @@
 
 <div class="@container mx-auto flex w-full max-w-4xl flex-1 flex-col space-y-10">
 	<section class="space-y-2">
-		<h1 class="text-[clamp(1.5rem,1.1rem+2vw,2rem)] font-semibold tracking-tight">ToolBase Usage Guide</h1>
+		<h1 class="text-[clamp(1.5rem,1.1rem+2vw,2rem)] font-book tracking-tight">ToolBase Usage Guide</h1>
 		<p class="max-w-prose text-sm text-muted-foreground md:text-base">
 			ToolBase is entirely reliant on people adding content to the platform, allowing users to have an easier way of
 			accessing information and resources for developing and designing applications. This comes with some
@@ -15,7 +15,7 @@
 	</section>
 
 	<section class="space-y-2">
-		<h2 class="text-[clamp(1.25rem,1.1rem+2vw,1.5rem)] font-medium tracking-tight">Navigating the Platform</h2>
+		<h2 class="text-[clamp(1.25rem,1.1rem+2vw,1.5rem)] font-book tracking-tight">Navigating the Platform</h2>
 		<p class="max-w-prose text-sm text-muted-foreground md:text-base">
 			ToolBase is built to be as simple as possible to navigate. Everything revolves around the sidebar and the header,
 			with the tool categories having their own dedicated pages that can be accessed by clicking on the corresponding
@@ -27,7 +27,7 @@
 	</section>
 
 	<section class="space-y-2">
-		<h2 class="text-[clamp(1.1rem,1.1rem+2vw,1.5rem)] font-medium tracking-tight">Adding Tools</h2>
+		<h2 class="text-[clamp(1.1rem,1.1rem+2vw,1.5rem)] font-book tracking-tight">Adding Tools</h2>
 		<p class="max-w-prose text-sm text-muted-foreground md:text-base">
 			To add a tool to ToolBase, you click the "Add Tool" button in the top right corner of the page, next to your
 			profile picture. This will open a dialog box containing a form containing the following fields:
@@ -47,7 +47,7 @@
 	</section>
 
 	<section class="space-y-2">
-		<h2 class="text-[clamp(1.1rem,1.1rem+2vw,1.5rem)] font-medium tracking-tight">Accurate Categories</h2>
+		<h2 class="text-[clamp(1.1rem,1.1rem+2vw,1.5rem)] font-book tracking-tight">Accurate Categories</h2>
 		<p class="max-w-prose text-sm text-muted-foreground md:text-base">
 			I am committed to allowing everyone to add tools freely to ToolBase. As part of this, it is crucial that
 			categories are accurate to ensure that tools can be found in their logical place. Please be certain that a tool
@@ -57,7 +57,7 @@
 	</section>
 
 	<section class="space-y-2">
-		<h2 class="text-[clamp(1.1rem,1.1rem+2vw,1.5rem)] font-medium tracking-tight">Editing and Deleting Tools</h2>
+		<h2 class="text-[clamp(1.1rem,1.1rem+2vw,1.5rem)] font-book tracking-tight">Editing and Deleting Tools</h2>
 		<p class="max-w-prose text-sm text-muted-foreground md:text-base">
 			For safety reasons, you need to request permission to be able to edit or delete tools. This is done to avoid
 			people tampering with tools added by other users. You can request permission by simply clicking the "Request to
