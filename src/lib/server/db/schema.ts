@@ -11,7 +11,7 @@ export const categories = pgTable('categories', {
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
 
-const statusEnum = pgEnum('status', ['published', 'pending']);
+export const statusEnum = pgEnum('status', ['published', 'pending']);
 
 export const tools = pgTable('tools', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -20,7 +20,7 @@ export const tools = pgTable('tools', {
 	url: text('url').notNull(),
 	categoryId: uuid('category_id').references(() => categories.id, { onDelete: 'set null' }),
 	logoUrl: text('logo_url'),
-	// status: statusEnum(),
+	status: statusEnum().notNull().default('pending'),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });

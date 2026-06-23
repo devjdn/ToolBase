@@ -24,7 +24,8 @@ export const load: PageServerLoad = async () => {
 			}
 		})
 		.from(tools)
-		.leftJoin(categories, eq(tools.categoryId, categories.id));
+		.leftJoin(categories, eq(tools.categoryId, categories.id))
+		.where(eq(tools.status, 'published'));
 
 	return {
 		tools: allTools
@@ -67,13 +68,17 @@ export const actions: Actions = {
 			logoUrl = data.publicUrl;
 		}
 
+		// const status = ['editor', 'admin'].includes(session.user.role ?? '') ? 'published' : 'pending';
+		const status = 'published';
+
 		try {
 			await db.insert(tools).values({
 				name: form.data.name,
 				url: form.data.url,
 				description: form.data.description ?? null,
 				categoryId: form.data.categoryId,
-				logoUrl
+				logoUrl,
+				status
 			});
 		} catch {
 			return message(form, { type: 'error', text: 'Failed to add tool' }, { status: 500 });

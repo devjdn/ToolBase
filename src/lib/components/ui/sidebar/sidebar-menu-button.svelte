@@ -15,7 +15,7 @@
 			size: {
 				default: 'h-8 text-sm',
 				sm: 'h-7 text-xs',
-				lg: 'h-12 px-3 text-sm group-data-[collapsible=icon]:p-0!'
+				lg: 'h-10 px-5 text-base [&_svg]:size-5 gap-3 rounded-lg group-data-[collapsible=icon]:p-0!'
 			}
 		},
 		defaultVariants: {

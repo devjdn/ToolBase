@@ -4,6 +4,8 @@ export type Tool = {
 	description: string | null;
 	url: string;
 	logoUrl: string | null;
+	createdAt: string;
+	updatedAt: string;
 	category?: {
 		id: string;
 		name: string;

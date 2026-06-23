@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { tools, categories } from '$lib/server/db/schema';
 
@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		})
 		.from(tools)
 		.innerJoin(categories, eq(tools.categoryId, categories.id))
-		.where(eq(categories.slug, params.slug));
+		.where(and(eq(categories.slug, params.slug), eq(tools.status, 'published')));
 
 	// checking if category exists if there are no rows
 	const category =
