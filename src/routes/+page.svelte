@@ -12,7 +12,7 @@
 
 <div class="@container mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
 	<section class="category-header">
-		<h1 class="text-[clamp(1.5rem,1.1rem+2vw,2rem)] font-medium tracking-tight">Home</h1>
+		<h1 class="text-[clamp(1.8rem,1.1rem+2vw,2rem)] font-semibold tracking-tight">Home</h1>
 	</section>
 
 	{#if data.tools.length === 0}
@@ -22,10 +22,10 @@
 		</div>
 	{:else}
 		<section class="tools-section flex-1">
-			<ul class="grid grid-cols-2 gap-3 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5">
+			<ul class="grid grid-cols-2 gap-4 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5">
 				{#each data.tools as tool (tool.id)}
 					<li>
-						<ToolCard {tool} data={data.editForm} showCategory />
+						<ToolCard {tool} showCategory />
 					</li>
 				{/each}
 			</ul>

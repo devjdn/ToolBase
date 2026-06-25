@@ -1,59 +1,59 @@
 <script lang="ts">
 	import type { Tool } from '$lib/types';
-	import type { EditToolSchema } from '$lib/zod-schemas';
-	import type { SuperValidated } from 'sveltekit-superforms';
-	import ToolDetailDialog from '../tool-detail-dialog/ToolDetailDialog.svelte';
 	import { Button } from '../ui/button/index';
 	import { ArrowUpRight } from '@lucide/svelte';
 	import { categoryIcons, defaultIcon } from '$lib/categoryIcons';
+	import { selectedTool } from '$lib/stores/global-tool-dialog';
 
 	let {
 		tool,
-		showCategory = false,
-		data
+		showCategory = false
 	}: {
 		tool: Tool;
 		showCategory?: boolean;
-		data: SuperValidated<EditToolSchema>;
 	} = $props();
 </script>
 
-<ToolDetailDialog {tool} {data}>
-	{#snippet trigger(props)}
-		<div
-			{...props}
-			class="group flex aspect-9/10 cursor-pointer flex-col justify-start gap-3 rounded-xl bg-card p-3 transition-all hover:bg-accent"
-		>
-			<div class="tool-logo grid aspect-square flex-1 place-items-center">
-				{#if tool.logoUrl}
-					<div class="grid aspect-square size-24 place-items-center rounded-md dark:bg-white">
-						<img src={tool.logoUrl} alt={tool.name} class="size-18 object-contain" />
-					</div>
-				{:else}
-					{@const Icon = tool.category ? (categoryIcons[tool.category.slug] ?? defaultIcon) : defaultIcon}
-					<div class="grid size-24 place-items-center rounded-lg">
-						<Icon class="size-18 text-muted-foreground" />
-					</div>
-				{/if}
+<div
+	role="button"
+	tabindex="0"
+	onclick={() => selectedTool.set(tool)}
+	onkeydown={(e) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			selectedTool.set(tool);
+		}
+	}}
+	class="group flex aspect-9/10 cursor-pointer flex-col justify-start gap-3 rounded-2xl bg-card p-3 transition-all hover:bg-accent"
+>
+	<div class="tool-logo grid aspect-square flex-1 place-items-center">
+		{#if tool.logoUrl}
+			<div class="grid aspect-square size-18 place-items-center rounded-xl md:size-24 dark:bg-white">
+				<img src={tool.logoUrl} alt={tool.name} class="size-12 object-contain md:size-18" />
 			</div>
-			<div class="flex flex-row items-end justify-between gap-3">
-				<div class="min-w-0 flex-1">
-					<p class="font-medium">{tool.name}</p>
-					{#if showCategory && tool.category}
-						<p class="text-xs text-muted-foreground">{tool.category.name}</p>
-					{/if}
-				</div>
+		{:else}
+			{@const Icon = tool.category ? (categoryIcons[tool.category.slug] ?? defaultIcon) : defaultIcon}
+			<div class="grid size-24 place-items-center rounded-lg">
+				<Icon class="size-18 text-muted-foreground" />
+			</div>
+		{/if}
+	</div>
+	<div class="flex flex-row items-end justify-between gap-3">
+		<div class="min-w-0 flex-1">
+			<p class="text-sm font-medium md:text-base">{tool.name}</p>
+			{#if showCategory && tool.category}
+				<p class="text-xs text-muted-foreground">{tool.category.name}</p>
+			{/if}
+		</div>
 
-				<Button
-					href={tool.url}
-					variant="secondary-raised"
-					target="_blank"
-					size="icon-sm"
-					onclick={(e) => e.stopPropagation()}
-				>
-					<span class="sr-only">Open Tool URL</span>
-					<ArrowUpRight />
-				</Button>
-			</div>
-		</div>{/snippet}
-</ToolDetailDialog>
+		<Button
+			href={tool.url}
+			variant="secondary-raised"
+			target="_blank"
+			size="icon-sm"
+			onclick={(e) => e.stopPropagation()}
+		>
+			<span class="sr-only">Open Tool URL</span>
+			<ArrowUpRight />
+		</Button>
+	</div>
+</div>

@@ -5,7 +5,7 @@
 	import type { LayoutData } from '../../../../routes/$types';
 	import { page } from '$app/state';
 	import clsx from 'clsx';
-	import { ArrowUpRight, Signpost, UserRoundPen } from '@lucide/svelte';
+	import { Signpost, UserRoundPen } from '@lucide/svelte';
 
 	let {
 		ref = $bindable(null),
@@ -42,7 +42,7 @@
 			</Sidebar.GroupContent>
 		</Sidebar.Group>
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Other Links</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel>Contributing to ToolBase</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
 					<Sidebar.MenuItem>
@@ -61,16 +61,6 @@
 								<a href="/request-to-edit" {...props}>
 									<UserRoundPen size={16} />
 									<span>Request to Edit</span>
-								</a>
-							{/snippet}
-						</Sidebar.MenuButton>
-					</Sidebar.MenuItem>
-					<Sidebar.MenuItem>
-						<Sidebar.MenuButton variant="ghost">
-							{#snippet child({ props })}
-								<a href="https://github.com/devjdn/ToolBase" {...props} target="_blank">
-									<ArrowUpRight size={16} />
-									<span>ToolBase GitHub</span>
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>

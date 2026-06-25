@@ -16,6 +16,8 @@ export const load: PageServerLoad = async () => {
 			url: tools.url,
 			description: tools.description,
 			logoUrl: tools.logoUrl,
+			createdAt: tools.createdAt,
+			updatedAt: tools.updatedAt,
 			category: {
 				id: categories.id,
 				name: categories.name,
