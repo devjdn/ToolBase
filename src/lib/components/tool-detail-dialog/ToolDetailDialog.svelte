@@ -54,7 +54,7 @@
 					{/if}
 
 					<div class="flex flex-wrap gap-1.5">
-						<Button class="relative w-30" variant="outline" size="lg" onclick={copied ? null : copyToolUrl}>
+						<Button class="relative w-30" variant="ghost" size="lg" onclick={copied ? null : copyToolUrl}>
 							<div class="relative h-5">
 								{#if copied}
 									<div

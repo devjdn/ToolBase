@@ -5,8 +5,10 @@
 	import { categoryIcons, defaultIcon } from '$lib/categoryIcons';
 	import Button from '../ui/button/button.svelte';
 	import { tick } from 'svelte';
+	import { Skeleton } from '../ui/skeleton/index';
+	import { ArrowUpRight } from '@lucide/svelte';
 
-	let { results }: { results: SearchResult[] } = $props();
+	let { results, isLoading }: { results: SearchResult[]; isLoading: boolean } = $props();
 
 	const headings: Record<SearchResultType, string> = {
 		tool: 'Tools',
@@ -68,61 +70,80 @@
 	});
 </script>
 
-<div bind:this={scrollContainer} class="h-96 space-y-3 overflow-y-auto px-2 py-6">
-	{#each Object.entries(grouped) as [type, items] (type)}
+<div bind:this={scrollContainer} class="h-96 space-y-6 overflow-y-auto px-2 py-6">
+	{#if isLoading}
 		<div class="space-y-3">
-			<p class="px-3 text-xs text-muted-foreground">
-				{headings[type as SearchResultType]}
-			</p>
-
-			<div class="flex flex-col">
-				{#each items as result (`${result.type}-${result.label}`)}
-					{@const flatIndex = flatResults.indexOf(result)}
-					{@const isHighlighted = flatIndex === highlightedIndex}
-					{@const Icon =
-						result.type === 'tool'
-							? result.tool.category
-								? (categoryIcons[result.tool.category.slug] ?? defaultIcon)
-								: defaultIcon
-							: result.type === 'category'
-								? (categoryIcons[result.categorySlug] ?? Folder)
-								: FileText}
-
-					<Button
-						data-index={flatIndex}
-						variant={isHighlighted ? 'secondary' : 'ghost'}
-						size="lg"
-						class="w-full px-3"
-						onclick={result.action}
-					>
-						{#if result.type === 'tool' && result.tool.logoUrl}
-							<div class="grid aspect-square size-5 place-items-center rounded-sm dark:bg-white">
-								<img class="aspect-square size-4" src={result.tool.logoUrl} alt={result.tool.name} />
-							</div>
-						{:else}
-							<Icon class="text-muted-foreground" />
-						{/if}
-
-						<span class="flex-1 truncate text-left">
-							{result.label}
-						</span>
-
-						{#if result.type === 'tool' && result.tool.category}
-							<span class="text-xs text-muted-foreground">
-								{result.tool.category.name}
-							</span>
-						{:else if result.type === 'page'}
-							<span class="text-xs text-muted-foreground">
-								{result.path}
-							</span>
-						{:else if result.type === 'category'}
-							<span class="text-xs text-muted-foreground">
-								/{result.categorySlug}
-							</span>
-						{/if}
-					</Button>
+			<p class="px-3 text-xs text-muted-foreground">Searching...</p>
+			<div class="flex flex-col gap-0.5">
+				{#each { length: 5 } as _, i (i)}
+					<Skeleton class="flex h-9 w-full items-center gap-3" />
 				{/each}
 			</div>
 		</div>
-	{/each}
+	{:else}
+		{#each Object.entries(grouped) as [type, items] (type)}
+			<div class="space-y-1.5">
+				<p class="px-3 text-xs text-muted-foreground">
+					{headings[type as SearchResultType]}
+				</p>
+
+				<div class="flex flex-col">
+					{#each items as result (`${result.type}-${result.label}`)}
+						{@const flatIndex = flatResults.indexOf(result)}
+						{@const isHighlighted = flatIndex === highlightedIndex}
+						{@const Icon =
+							result.type === 'tool'
+								? result.tool.category
+									? (categoryIcons[result.tool.category.slug] ?? defaultIcon)
+									: defaultIcon
+								: result.type === 'category'
+									? (categoryIcons[result.categorySlug] ?? Folder)
+									: FileText}
+
+						<div class="flex flex-row gap-0.5">
+							<Button
+								data-index={flatIndex}
+								variant={isHighlighted ? 'secondary' : 'ghost'}
+								size="lg"
+								class="w-full flex-1 px-3"
+								onclick={result.action}
+							>
+								{#if result.type === 'tool' && result.tool.logoUrl}
+									<div class="grid aspect-square size-5 place-items-center rounded-sm dark:bg-white">
+										<img class="aspect-square size-4" src={result.tool.logoUrl} alt={result.tool.name} />
+									</div>
+								{:else}
+									<Icon class="text-muted-foreground" />
+								{/if}
+
+								<span class="flex-1 truncate text-left">
+									{result.label}
+								</span>
+
+								{#if result.type === 'tool' && result.tool.category}
+									<span class="text-xs text-muted-foreground">
+										{result.tool.category.name}
+									</span>
+								{:else if result.type === 'page'}
+									<span class="text-xs text-muted-foreground">
+										{result.path}
+									</span>
+								{:else if result.type === 'category'}
+									<span class="text-xs text-muted-foreground">
+										/{result.categorySlug}
+									</span>
+								{/if}
+							</Button>
+
+							{#if result.type === 'tool'}
+								<Button size="icon-lg" variant="ghost" href={result.tool.url} target="_blank">
+									<ArrowUpRight />
+								</Button>
+							{/if}
+						</div>
+					{/each}
+				</div>
+			</div>
+		{/each}
+	{/if}
 </div>

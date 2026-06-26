@@ -27,6 +27,7 @@
 	let debounceTimer: ReturnType<typeof setTimeout>;
 	let abortController: AbortController | null = null;
 	let lastQuery = '';
+	let isLoading = $state(false);
 
 	const staticPages: SearchResultPage[] = [
 		{
@@ -69,6 +70,7 @@
 
 		abortController?.abort();
 		abortController = new AbortController();
+		isLoading = true;
 
 		try {
 			const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
@@ -107,6 +109,8 @@
 			];
 		} catch (e) {
 			if ((e as Error).name !== 'AbortError') console.error(e);
+		} finally {
+			isLoading = false;
 		}
 	}
 
@@ -127,6 +131,9 @@
 
 <Dialog.Root bind:open={$searchOpen}>
 	<Dialog.Content showCloseButton={isMobile.current} class="gap-0 p-0 md:max-w-lg">
+		<Dialog.Header class="sr-only">
+			<Dialog.Title>Search ToolBase</Dialog.Title>
+		</Dialog.Header>
 		<div class="flex items-center gap-3 border-b px-4 py-5">
 			<Search class="size-5 shrink-0 text-muted-foreground" />
 			<input
@@ -139,6 +146,26 @@
 				<Kbd.Root>Esc</Kbd.Root>
 			{/if}
 		</div>
-		<SearchResults {results} />
+		<SearchResults {results} {isLoading} />
+
+		<Dialog.Footer class="justify-between! border-t bg-muted px-4 py-5">
+			<div>
+				<p class="text-sm text-muted-foreground">
+					<Kbd.Group>
+						<Kbd.Root>↑</Kbd.Root>
+						<Kbd.Root>↓</Kbd.Root>
+					</Kbd.Group>
+
+					Cycle Results
+				</p>
+			</div>
+			<div>
+				<p class="text-sm text-muted-foreground">
+					<Kbd.Root>↵</Kbd.Root>
+
+					Open tool in dialog
+				</p>
+			</div>
+		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

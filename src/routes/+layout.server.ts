@@ -23,8 +23,8 @@ export const load: LayoutServerLoad = async (event) => {
 
 	return {
 		categories: allCategories,
-		addForm: await superValidate(zod4(addToolSchema)),
-		editForm: await superValidate(zod4(editToolSchema)),
+		addForm: superValidate(zod4(addToolSchema)),
+		editForm: superValidate(zod4(editToolSchema)),
 		user: session?.user ?? null
 	};
 };

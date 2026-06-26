@@ -9,7 +9,7 @@ import { supabase } from '$lib/server/supabase';
 import { addToolSchema, editToolSchema } from '$lib/zod-schemas';
 
 export const load: PageServerLoad = async () => {
-	const allTools = await db
+	const allTools = db
 		.select({
 			id: tools.id,
 			name: tools.name,
