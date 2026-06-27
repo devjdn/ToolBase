@@ -107,9 +107,11 @@
 								class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
 							>
 								<option value="" disabled selected>Select a category</option>
-								{#each categories as category (category.id)}
-									<option value={category.id}>{category.name}</option>
-								{/each}
+								{#await categories then resolvedCategories}
+									{#each resolvedCategories as category (category.id)}
+										<option value={category.id}>{category.name}</option>
+									{/each}
+								{/await}
 							</select>
 						{/snippet}
 					</Form.Control>

@@ -9,7 +9,7 @@ import { addToolSchema, editToolSchema } from '$lib/zod-schemas';
 export const load: LayoutServerLoad = async (event) => {
 	const session = await event.locals.getSession();
 
-	const allCategories = await db
+	const allCategories = db
 		.select({
 			id: categories.id,
 			name: categories.name,

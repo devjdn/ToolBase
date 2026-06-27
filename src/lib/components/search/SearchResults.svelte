@@ -80,7 +80,7 @@
 				{/each}
 			</div>
 		</div>
-	{:else}
+	{:else if flatResults.length > 0}
 		{#each Object.entries(grouped) as [type, items] (type)}
 			<div class="space-y-1.5">
 				<p class="px-3 text-xs text-muted-foreground">
@@ -145,5 +145,12 @@
 				</div>
 			</div>
 		{/each}
+	{:else}
+		<div class="flex size-full flex-col items-center justify-center gap-1 leading-tight">
+			<p class="text-sm font-medium">No matches found</p>
+			<p class="max-w-prose text-xs text-muted-foreground">
+				Try a different term related to your search. If a tool is missing, feel free to add it to ToolBase.
+			</p>
+		</div>
 	{/if}
 </div>

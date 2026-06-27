@@ -70,7 +70,6 @@
 
 		abortController?.abort();
 		abortController = new AbortController();
-		isLoading = true;
 
 		try {
 			const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
@@ -121,6 +120,13 @@
 	$effect(() => {
 		const q = query;
 		clearTimeout(debounceTimer);
+
+		if (q.trim().length >= 2) {
+			isLoading = true;
+		} else {
+			isLoading = false;
+		}
+
 		debounceTimer = setTimeout(() => search(q), 200);
 	});
 
