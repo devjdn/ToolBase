@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index';
 	import { Button } from '../ui/button/index';
-	import { Copy, Check } from '@lucide/svelte/icons';
+	import { Copy, Check, ArrowUpRight } from '@lucide/svelte/icons';
 	import { scale } from 'svelte/transition';
 	import DeleteToolButton from '../delete-tool/DeleteToolButton.svelte';
 	import EditToolDialog from '../edit-tool/EditToolDialog.svelte';
@@ -9,6 +9,8 @@
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { page } from '$app/state';
 	import { selectedTool } from '$lib/stores/global-tool-dialog';
+	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
+	import clsx from 'clsx';
 
 	let {
 		data
@@ -19,6 +21,8 @@
 	let open = $state(false);
 
 	let copied = $state(false);
+
+	const isMobile = new IsMobile();
 
 	async function copyToolUrl() {
 		copied = true;
@@ -54,7 +58,22 @@
 					{/if}
 
 					<div class="flex flex-wrap gap-1.5">
-						<Button class="relative w-30" variant="ghost" size="lg" onclick={copied ? null : copyToolUrl}>
+						<Button
+							class="relative md:w-30"
+							variant="secondary"
+							size={isMobile.current ? 'icon-lg' : 'lg'}
+							href={$selectedTool.url}
+							target="_blank"
+						>
+							<ArrowUpRight />
+							<span class="not-md:hidden">Open URL</span>
+						</Button>
+						<Button
+							class="relative md:w-30"
+							variant="outline"
+							size={isMobile.current ? 'icon-lg' : 'lg'}
+							onclick={copied ? null : copyToolUrl}
+						>
 							<div class="relative h-5">
 								{#if copied}
 									<div
@@ -63,7 +82,7 @@
 										class="absolute inset-0 flex items-center justify-center gap-2"
 									>
 										<Check class="stroke-green-600 dark:stroke-green-400" />
-										<span>Copied!</span>
+										<span class={clsx({ hidden: isMobile.current })}>Copied!</span>
 									</div>
 								{:else}
 									<div
@@ -72,7 +91,7 @@
 										class="absolute inset-0 flex items-center justify-center gap-2"
 									>
 										<Copy />
-										<span>Copy URL</span>
+										<span class={clsx({ hidden: isMobile.current })}>Copy URL</span>
 									</div>
 								{/if}
 							</div>

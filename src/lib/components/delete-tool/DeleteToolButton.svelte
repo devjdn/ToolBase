@@ -5,7 +5,10 @@
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import { toast } from 'svelte-sonner';
 
+	const { current: isMobile } = new IsMobile();
+
 	import type { Tool } from '$lib/types';
+	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 
 	let { tool, open = $bindable(false) }: { tool: Tool; open: boolean } = $props();
 </script>
@@ -13,9 +16,9 @@
 <AlertDialog.Root>
 	<AlertDialog.Trigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="destructive" size="lg">
+			<Button {...props} variant="destructive" size={isMobile ? 'icon-lg' : 'lg'}>
 				<Trash2 />
-				<span>Delete</span>
+				<span class="not-md:hidden">Delete</span>
 			</Button>
 		{/snippet}
 	</AlertDialog.Trigger>

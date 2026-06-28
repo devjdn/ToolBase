@@ -13,6 +13,7 @@
 	import { editToolSchema, type EditToolSchema } from '$lib/zod-schemas';
 	import type { Tool } from '$lib/types';
 	import { toast } from 'svelte-sonner';
+	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 
 	let {
 		tool,
@@ -23,6 +24,8 @@
 	} = $props();
 
 	let open = $state(false);
+
+	const { current: isMobile } = new IsMobile();
 
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data, {
@@ -58,9 +61,9 @@
 <Dialog.Root bind:open>
 	<Dialog.Trigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="caution" size="lg">
+			<Button {...props} variant="caution" size={isMobile ? 'icon-lg' : 'lg'}>
 				<Pencil />
-				<span>Edit</span>
+				<span class="not-md:hidden">Edit</span>
 			</Button>
 		{/snippet}
 	</Dialog.Trigger>
@@ -102,16 +105,22 @@
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label>Category</Form.Label>
-							<select
-								required
-								bind:value={$formData.categoryId}
-								{...props}
-								class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-							>
-								{#each page.data.categories as category (category.id)}
-									<option value={category.id}>{category.name}</option>
-								{/each}
-							</select>
+							{#await page.data.categories}
+								<select disabled class="...">
+									<option>Loading...</option>
+								</select>
+							{:then categories}
+								<select
+									required
+									bind:value={$formData.categoryId}
+									{...props}
+									class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+								>
+									{#each categories as category (category.id)}
+										<option value={category.id}>{category.name}</option>
+									{/each}
+								</select>
+							{/await}
 						{/snippet}
 					</Form.Control>
 				</Form.Field>
