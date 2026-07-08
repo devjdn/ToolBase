@@ -23,9 +23,9 @@
 			selectedTool.set(tool);
 		}
 	}}
-	class="group flex aspect-9/10 cursor-pointer flex-col justify-start gap-3 rounded-2xl bg-card p-3 transition-all hover:bg-accent"
+	class="group flex shrink-0 aspect-9/11 cursor-pointer flex-col justify-start gap-3 rounded-2xl bg-card p-3 transition-all hover:bg-accent"
 >
-	<div class="tool-logo grid aspect-square flex-1 place-items-center">
+	<div class="tool-logo flex justify-center items-center flex-1">
 		{#if tool.logoUrl}
 			<div class="grid aspect-square size-18 place-items-center rounded-xl md:size-24 dark:bg-white">
 				<img src={tool.logoUrl} alt={tool.name} class="size-12 object-contain md:size-18" />
@@ -37,7 +37,7 @@
 			</div>
 		{/if}
 	</div>
-	<div class="flex flex-row items-end justify-between gap-3">
+	<div class="flex flex-row items-end justify-between gap-3 h-10">
 		<div class="min-w-0 flex-1">
 			<p class="text-sm font-medium md:text-base">{tool.name}</p>
 			{#if showCategory && tool.category}

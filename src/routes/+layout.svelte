@@ -24,7 +24,11 @@
 	}
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<link rel="preconnect" href="https://fpsuymmshooskqzbygzx.storage.supabase.co" />
+	<link rel="dns-prefetch" href="https://fpsuymmshooskqzbygzx.storage.supabase.co" />
+</svelte:head>
 
 <svelte:window onkeydown={handleKeyDown} />
 

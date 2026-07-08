@@ -60,16 +60,6 @@
 					<div class="flex flex-wrap gap-1.5">
 						<Button
 							class="relative md:w-30"
-							variant="secondary"
-							size={isMobile.current ? 'icon-lg' : 'lg'}
-							href={$selectedTool.url}
-							target="_blank"
-						>
-							<ArrowUpRight />
-							<span class="not-md:hidden">Open URL</span>
-						</Button>
-						<Button
-							class="relative md:w-30"
 							variant="outline"
 							size={isMobile.current ? 'icon-lg' : 'lg'}
 							onclick={copied ? null : copyToolUrl}
@@ -95,6 +85,17 @@
 									</div>
 								{/if}
 							</div>
+						</Button>
+
+						<Button
+							class="relative md:w-30"
+							variant="secondary"
+							size={isMobile.current ? 'icon-lg' : 'lg'}
+							href={$selectedTool.url}
+							target="_blank"
+						>
+							<ArrowUpRight />
+							<span class="not-md:hidden">Open URL</span>
 						</Button>
 
 						{#if page.data.user && ['editor', 'admin'].includes(page.data.user?.role ?? '')}
