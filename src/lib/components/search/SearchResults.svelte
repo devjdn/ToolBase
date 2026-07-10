@@ -136,7 +136,13 @@
 							</Button>
 
 							{#if result.type === 'tool'}
-								<Button size="icon-lg" variant="ghost" href={result.tool.url} target="_blank">
+								<Button
+									size="icon-lg"
+									variant="ghost"
+									aria-label="Open tool in a new tab"
+									href={result.tool.url}
+									target="_blank"
+								>
 									<ArrowUpRight />
 								</Button>
 							{/if}

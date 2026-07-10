@@ -10,7 +10,7 @@
 				primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
 				secondary: 'bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground',
 				ghost:
-					'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground aria-expanded:bg-sidebar-accent aria-expanded:text-sidebar-accent-foreground'
+					'hover:bg-sidebar-accent transition-colors duration-150 hover:text-sidebar-accent-foreground aria-expanded:bg-sidebar-accent aria-expanded:text-sidebar-accent-foreground'
 			},
 			size: {
 				default: 'h-8 text-sm',

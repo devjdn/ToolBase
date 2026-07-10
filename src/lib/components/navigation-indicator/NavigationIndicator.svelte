@@ -21,7 +21,7 @@
 {#if visible}
 	<div class="absolute top-(--header-height) left-0 z-50 w-full overflow-hidden">
 		<div
-			class="h-0.5 bg-blue-500 transition-[width] duration-500 ease-out"
+			class="h-0.5 bg-neutral-500 transition-[width] duration-500 ease-out"
 			style="width: {complete ? '100%' : '60%'}"
 		></div>
 	</div>

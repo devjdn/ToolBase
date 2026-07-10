@@ -23,12 +23,12 @@
 			selectedTool.set(tool);
 		}
 	}}
-	class="group flex shrink-0 aspect-9/11 cursor-pointer flex-col justify-start gap-3 rounded-2xl bg-card p-3 transition-all hover:bg-accent"
+	class="group @container flex aspect-9/11 shrink-0 cursor-pointer flex-col justify-start gap-3 rounded-2xl bg-card p-3 transition-all hover:bg-accent"
 >
-	<div class="tool-logo flex justify-center items-center flex-1">
+	<div class="tool-logo flex flex-1 items-center justify-center">
 		{#if tool.logoUrl}
-			<div class="grid aspect-square size-18 place-items-center rounded-xl md:size-24 dark:bg-white">
-				<img src={tool.logoUrl} alt={tool.name} class="size-12 object-contain md:size-18" />
+			<div class="grid aspect-square size-18 place-items-center rounded-xl @[200px]:size-24 dark:bg-white">
+				<img src={tool.logoUrl} alt={tool.name} class="size-12 object-contain @[200px]:size-18" />
 			</div>
 		{:else}
 			{@const Icon = tool.category ? (categoryIcons[tool.category.slug] ?? defaultIcon) : defaultIcon}
@@ -37,9 +37,9 @@
 			</div>
 		{/if}
 	</div>
-	<div class="flex flex-row items-end justify-between gap-3 h-10">
+	<div class="flex h-10 flex-row items-end justify-between gap-3">
 		<div class="min-w-0 flex-1">
-			<p class="text-sm font-medium md:text-base">{tool.name}</p>
+			<p class="text-sm font-medium @[200px]:text-base">{tool.name}</p>
 			{#if showCategory && tool.category}
 				<p class="text-xs text-muted-foreground">{tool.category.name}</p>
 			{/if}

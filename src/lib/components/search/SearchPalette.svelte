@@ -129,10 +129,6 @@
 
 		debounceTimer = setTimeout(() => search(q), 200);
 	});
-
-	$effect(() => {
-		console.log(results);
-	});
 </script>
 
 <Dialog.Root bind:open={$searchOpen}>

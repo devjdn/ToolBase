@@ -26,8 +26,12 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<link rel="preconnect" href="https://fpsuymmshooskqzbygzx.storage.supabase.co" />
-	<link rel="dns-prefetch" href="https://fpsuymmshooskqzbygzx.storage.supabase.co" />
+	<link rel="preconnect" href="https://fpsuymmshooskqzbygzx.supabase.co" />
+	<link rel="dns-prefetch" href="https://fpsuymmshooskqzbygzx.supabase.co" />
+	<meta
+		name="description"
+		content="ToolBase is a developer platform dedicated to allowing the community to share and discover tools for building, primarily, web applications."
+	/>
 </svelte:head>
 
 <svelte:window onkeydown={handleKeyDown} />

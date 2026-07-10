@@ -22,7 +22,7 @@ export const load: LayoutServerLoad = async (event) => {
 		.orderBy(asc(categories.order));
 
 	return {
-		categories: allCategories,
+		categories: await allCategories,
 		addForm: superValidate(zod4(addToolSchema)),
 		editForm: await superValidate(zod4(editToolSchema)),
 		user: session?.user ?? null

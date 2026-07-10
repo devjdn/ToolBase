@@ -5,7 +5,7 @@
 	import { searchOpen } from './SearchPalette.svelte';
 </script>
 
-<Button variant="ghost" size="icon" class="md:hidden" onclick={() => searchOpen.set(true)}>
+<Button variant="ghost" size="icon" class="md:hidden" aria-label="Search ToolBase" onclick={() => searchOpen.set(true)}>
 	<Search class="text-muted-foreground" absoluteStrokeWidth strokeWidth={2.5} />
 </Button>
 

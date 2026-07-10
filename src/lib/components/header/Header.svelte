@@ -8,12 +8,13 @@
 	import type { LayoutData } from '../../../routes/$types';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { useSidebar } from '../ui/sidebar';
-	import { LogIn, LogOut, Moon, Sun, Laptop, Menu } from '@lucide/svelte';
+	import { LogIn, LogOut, Moon, Sun, Laptop, PanelLeft, PanelBottom, UserRound, UserRoundPen } from '@lucide/svelte';
 	import { mode, setMode } from 'mode-watcher';
 	import { page } from '$app/state';
 	import { invalidateAll } from '$app/navigation';
 	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 	import SearchTrigger from '../search/SearchTrigger.svelte';
+	import Separator from '../ui/separator/separator.svelte';
 
 	let { categories }: { categories: LayoutData['categories'] } = $props();
 
@@ -38,12 +39,14 @@
 <header
 	class="sticky top-0 z-50 flex h-12 items-center justify-between gap-4 border-b bg-background/90 px-3 backdrop-blur-sm"
 >
-	<div class="flex items-center justify-start gap-1.5">
-		<Button variant="link" class="md:hidden [&>svg]:size-5" size="icon" onclick={toggle}>
-			<Menu strokeWidth={2.5} absoluteStrokeWidth />
+	<div class="flex h-6 items-center justify-start">
+		<Button variant="ghost" size="icon" aria-label="Toggle Navigation Menu" onclick={toggle}>
+			<PanelBottom class="md:hidden" />
+			<PanelLeft class="not-md:hidden" />
 		</Button>
-		<a href="/" class="group inline-flex w-fit items-start gap-1">
-			<span class="text-lg font-medium tracking-tighter">ToolBase</span>
+		<Separator class="mr-3 ml-2 h-9" orientation="vertical" />
+		<a href="/" class="group w-fit">
+			<p class="text-lg leading-tight font-medium tracking-tighter">ToolBase</p>
 		</a>
 	</div>
 
@@ -62,7 +65,7 @@
 		{/if}
 
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger>
+			<DropdownMenu.Trigger aria-label="Account & Settings">
 				{#snippet child({ props })}
 					{#if $session.data}
 						<Avatar.Root class="size-8 cursor-pointer border" {...props}>
@@ -74,7 +77,7 @@
 					{:else if $session.isPending}
 						<Skeleton class="size-8 rounded-full border" />
 					{:else}
-						<Button {...props} variant="secondary">Sign In & Settings</Button>
+						<Button {...props} variant="secondary" size="icon"><UserRound /></Button>
 					{/if}
 				{/snippet}
 			</DropdownMenu.Trigger>
@@ -107,6 +110,12 @@
 				{#if $session.data}
 					<DropdownMenu.Label>{$session.data.user.email}</DropdownMenu.Label>
 					<DropdownMenu.Group>
+						{#if !['editor', 'admin'].includes($session.data.user?.role ?? '')}
+							<DropdownMenu.Item>
+								<UserRoundPen />
+								<span>Request Editor Role</span>
+							</DropdownMenu.Item>
+						{/if}
 						<DropdownMenu.Item variant="destructive" onclick={signOut}>
 							<LogOut />
 							<span>Sign Out</span>
