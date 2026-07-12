@@ -1,10 +1,13 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, desc, count } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { tools, categories } from '$lib/server/db/schema';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, url }) => {
+	const page = Math.max(1, Number(url.searchParams.get('page') ?? 1));
+	const pageSize = 24;
+
 	// checking if category exists if there are no rows
 	const category = await db
 		.select()
@@ -33,7 +36,23 @@ export const load: PageServerLoad = async ({ params }) => {
 		})
 		.from(tools)
 		.innerJoin(categories, eq(tools.categoryId, categories.id))
-		.where(and(eq(categories.slug, params.slug), eq(tools.status, 'published')));
+		.where(and(eq(tools.categoryId, category.id), eq(tools.status, 'published')))
+		.orderBy(desc(tools.createdAt))
+		.offset((page - 1) * pageSize)
+		.limit(pageSize);
 
-	return { category, tools: rows };
+	const totalCount = db
+		.select({ count: count() })
+		.from(tools)
+		.where(and(eq(tools.categoryId, category.id), eq(tools.status, 'published')));
+
+	return {
+		category,
+		tools: rows,
+		pagination: totalCount.then(([{ count: total }]) => ({
+			page,
+			pageSize,
+			totalPages: Math.ceil(Number(total) / pageSize)
+		}))
+	};
 };

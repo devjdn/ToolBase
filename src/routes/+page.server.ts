@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { tools, categories } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { count, desc, eq } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
@@ -8,7 +8,10 @@ import { zod4 } from 'sveltekit-superforms/adapters';
 import { supabase } from '$lib/server/supabase';
 import { addToolSchema, editToolSchema } from '$lib/zod-schemas';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ url }) => {
+	const page = Math.max(1, Number(url.searchParams.get('page') ?? 1));
+	const pageSize = 24;
+
 	const allTools = db
 		.select({
 			id: tools.id,
@@ -27,10 +30,20 @@ export const load: PageServerLoad = async () => {
 		})
 		.from(tools)
 		.leftJoin(categories, eq(tools.categoryId, categories.id))
-		.where(eq(tools.status, 'published'));
+		.where(eq(tools.status, 'published'))
+		.orderBy(desc(tools.createdAt))
+		.offset((page - 1) * pageSize)
+		.limit(pageSize);
+
+	const totalCount = db.select({ count: count() }).from(tools).where(eq(tools.status, 'published'));
 
 	return {
-		tools: allTools
+		tools: allTools,
+		pagination: totalCount.then(([{ count: total }]) => ({
+			page,
+			pageSize,
+			totalPages: Math.ceil(Number(total) / pageSize)
+		}))
 	};
 };
 

@@ -1,10 +1,9 @@
 <script lang="ts">
 	import ToolCard from '$lib/components/tool-card/ToolCard.svelte';
 	import ToolCardSkeleton from '$lib/components/tool-card/ToolCardSkeleton.svelte';
+	import PaginationBar from '$lib/components/pagination/PaginationBar.svelte';
 	import type { PageProps } from './$types';
-
 	let { data }: PageProps = $props();
-	// console.log(data.tools);
 </script>
 
 <svelte:head>
@@ -42,6 +41,14 @@
 					{/each}
 				</ul>
 			</section>
+
+			{#await data.pagination then pagination}
+				<PaginationBar
+					currentPage={pagination.page}
+					totalPages={pagination.totalPages}
+					pageSize={pagination.pageSize}
+				/>
+			{/await}
 		{/if}
 	{:catch}
 		<div class="flex flex-1 flex-col items-center justify-center gap-1 leading-tight">

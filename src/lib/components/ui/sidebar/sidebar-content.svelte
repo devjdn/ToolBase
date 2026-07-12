@@ -15,7 +15,7 @@
 	data-slot="sidebar-content"
 	data-sidebar="content"
 	class={cn(
-		'flex flex-col gap-3 [--radius:var(--radius-xl)] group-data-[collapsible=icon]:overflow-hidden md:flex-1 md:overflow-auto',
+		'flex flex-col gap-1.5 [--radius:var(--radius-xl)] group-data-[collapsible=icon]:overflow-hidden md:flex-1 md:overflow-auto',
 		className
 	)}
 	{...restProps}

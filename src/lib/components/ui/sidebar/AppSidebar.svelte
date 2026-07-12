@@ -5,7 +5,7 @@
 	import type { LayoutData } from '../../../../routes/$types';
 	import { page } from '$app/state';
 	import clsx from 'clsx';
-	import { LayoutGrid, Signpost, UserRoundPen } from '@lucide/svelte';
+	import { LayoutGrid, Signpost } from '@lucide/svelte';
 
 	let {
 		ref = $bindable(null),
