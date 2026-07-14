@@ -23,7 +23,7 @@
 {#if totalPages > 1}
 	<Pagination.Root count={totalPages * pageSize} perPage={pageSize} page={currentPage} {onPageChange}>
 		{#snippet children({ pages, currentPage })}
-			<Pagination.Content>
+			<Pagination.Content class="mt-8 not-md:mb-8">
 				<Pagination.Item>
 					<Pagination.Previous />
 				</Pagination.Item>

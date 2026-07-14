@@ -9,11 +9,12 @@
 
 	import type { Tool } from '$lib/types';
 	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
+	import { selectedTool } from '$lib/stores/global-tool-dialog';
 
 	let { tool, open = $bindable(false) }: { tool: Tool; open: boolean } = $props();
 </script>
 
-<AlertDialog.Root>
+<AlertDialog.Root bind:open>
 	<AlertDialog.Trigger>
 		{#snippet child({ props })}
 			<Button {...props} variant="destructive" size={isMobile ? 'icon-lg' : 'lg'}>
@@ -39,6 +40,7 @@
 						if (result.type === 'success') {
 							open = false;
 							toast.success(`${tool.name} deleted successfully`);
+							selectedTool.set(null);
 							await update();
 						} else {
 							toast.error(`Failed to delete ${tool.name}`);

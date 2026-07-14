@@ -54,7 +54,7 @@
 			<div class="flex flex-col gap-6">
 				<div class="flex flex-1 flex-col gap-6">
 					{#if $selectedTool.description}
-						<p class="max-w-prose text-sm text-muted-foreground">{$selectedTool.description}</p>
+						<p class="max-w-prose text-sm wrap-break-word text-muted-foreground">{$selectedTool.description}</p>
 					{/if}
 
 					<div class="flex flex-wrap gap-1.5">

@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const addToolSchema = z.object({
 	name: z.string().min(1, 'Name is required'),
 	url: z.url('Must be a valid URL'),
-	description: z.string().max(255).optional(),
+	description: z.string().max(500).optional(),
 	categoryId: z.uuid('Please select a category')
 });
 

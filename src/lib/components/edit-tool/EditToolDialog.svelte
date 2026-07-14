@@ -14,6 +14,7 @@
 	import type { Tool } from '$lib/types';
 	import { toast } from 'svelte-sonner';
 	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
+	import { selectedTool } from '$lib/stores/global-tool-dialog';
 
 	let {
 		tool,
@@ -30,14 +31,14 @@
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data, {
 		validators: zod4Client(editToolSchema),
-		onUpdated: ({ form }) => {
-			if (form.message?.type === 'success') toast.success(form.message.text);
-			if (form.message?.type === 'error') toast.error(form.message.text);
-		},
-		onResult: ({ result }) => {
-			if (result.type === 'success') {
+		validationMethod: 'oninput',
+		onUpdated: ({ form: f }) => {
+			if (f.message?.type === 'success') {
+				toast.success(f.message.text);
 				open = false;
+				selectedTool.set(null);
 			}
+			if (f.message?.type === 'error') toast.error(f.message.text);
 		}
 	});
 
@@ -67,15 +68,21 @@
 			</Button>
 		{/snippet}
 	</Dialog.Trigger>
-	<Dialog.Content class="max-w-sm">
+	<Dialog.Content class="lg:h-full lg:max-h-125 lg:max-w-4xl">
 		<Dialog.Header>
 			<Dialog.Title>Edit Tool</Dialog.Title>
 			<Dialog.Description>Update the details for {tool.name}.</Dialog.Description>
 		</Dialog.Header>
-		<form method="POST" action="/?/editTool" enctype="multipart/form-data" use:enhance>
+		<form
+			method="POST"
+			action="/?/editTool"
+			enctype="multipart/form-data"
+			use:enhance
+			class="flex flex-col justify-between"
+		>
 			<input type="hidden" name="id" value={tool.id} />
-			<div class="flex flex-col gap-3 py-3">
-				<Form.Field {form} name="name">
+			<div class="flex flex-col gap-6 py-3 not-lg:mb-8 lg:grid lg:grid-cols-2 lg:gap-x-12">
+				<Form.Field {form} name="name" class="lg:col-span-1">
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label>Name</Form.Label>
@@ -83,7 +90,7 @@
 						{/snippet}
 					</Form.Control>
 				</Form.Field>
-				<Form.Field {form} name="url">
+				<Form.Field {form} name="url" class="lg:col-span-1">
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label>URL</Form.Label>
@@ -91,17 +98,22 @@
 						{/snippet}
 					</Form.Control>
 				</Form.Field>
-				<Form.Field {form} name="description">
+				<Form.Field {form} name="description" class="lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:flex lg:flex-col">
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label>
 								Description <span class="text-xs text-muted-foreground">(optional)</span>
 							</Form.Label>
-							<Textarea {...props} bind:value={$formData.description} class="resize-none" rows={3} />
+							<Textarea
+								{...props}
+								bind:value={$formData.description}
+								class="resize-none lg:flex-1 lg:overflow-y-auto"
+								rows={3}
+							/>
 						{/snippet}
 					</Form.Control>
 				</Form.Field>
-				<Form.Field {form} name="categoryId">
+				<Form.Field {form} name="categoryId" class="lg:col-span-1">
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label>Category</Form.Label>
@@ -124,7 +136,7 @@
 						{/snippet}
 					</Form.Control>
 				</Form.Field>
-				<div class="flex flex-col gap-1.5">
+				<div class="flex flex-col gap-1.5 lg:col-span-1">
 					<Label>Logo <span class="text-xs text-muted-foreground">(optional — replaces existing)</span></Label>
 					<Input name="logo" type="file" accept="image/webp,image/svg+xml" />
 					{#if tool.logoUrl}
