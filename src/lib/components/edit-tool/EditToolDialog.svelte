@@ -5,6 +5,7 @@
 	import { Textarea } from '../ui/textarea/index';
 	import { Button } from '../ui/button/index';
 	import * as Form from '../ui/form/index';
+	import * as Tooltip from '../ui/tooltip/index';
 	import { Pencil } from '@lucide/svelte';
 	import { page } from '$app/state';
 	import { superForm } from 'sveltekit-superforms';
@@ -13,7 +14,6 @@
 	import { editToolSchema, type EditToolSchema } from '$lib/zod-schemas';
 	import type { Tool } from '$lib/types';
 	import { toast } from 'svelte-sonner';
-	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 	import { selectedTool } from '$lib/stores/global-tool-dialog';
 
 	let {
@@ -25,8 +25,6 @@
 	} = $props();
 
 	let open = $state(false);
-
-	const { current: isMobile } = new IsMobile();
 
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data, {
@@ -62,26 +60,27 @@
 <Dialog.Root bind:open>
 	<Dialog.Trigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="caution" size={isMobile ? 'icon-lg' : 'lg'}>
-				<Pencil />
-				<span class="not-md:hidden">Edit</span>
-			</Button>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<Button {...props} variant="caution" size="icon-lg">
+						<Pencil />
+						<span class="sr-only">Edit</span>
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content sideOffset={6}>
+					<span>Edit</span>
+				</Tooltip.Content>
+			</Tooltip.Root>
 		{/snippet}
 	</Dialog.Trigger>
-	<Dialog.Content class="lg:h-full lg:max-h-125 lg:max-w-4xl">
-		<Dialog.Header>
+	<Dialog.Content class="gap-0 p-0 lg:max-w-4xl">
+		<Dialog.Header class="p-6">
 			<Dialog.Title>Edit Tool</Dialog.Title>
 			<Dialog.Description>Update the details for {tool.name}.</Dialog.Description>
 		</Dialog.Header>
-		<form
-			method="POST"
-			action="/?/editTool"
-			enctype="multipart/form-data"
-			use:enhance
-			class="flex flex-col justify-between"
-		>
+		<form method="POST" action="/?/editTool" enctype="multipart/form-data" id="edit-tool-form" use:enhance>
 			<input type="hidden" name="id" value={tool.id} />
-			<div class="flex flex-col gap-6 py-3 not-lg:mb-8 lg:grid lg:grid-cols-2 lg:gap-x-12">
+			<div class="flex flex-col gap-6 p-6 not-lg:mb-8 lg:grid lg:grid-cols-2 lg:gap-x-12">
 				<Form.Field {form} name="name" class="lg:col-span-1">
 					<Form.Control>
 						{#snippet children({ props })}
@@ -107,7 +106,7 @@
 							<Textarea
 								{...props}
 								bind:value={$formData.description}
-								class="resize-none lg:flex-1 lg:overflow-y-auto"
+								class="max-h-47 resize-none lg:flex-1 lg:overflow-y-auto"
 								rows={3}
 							/>
 						{/snippet}
@@ -144,12 +143,12 @@
 					{/if}
 				</div>
 			</div>
-			<Dialog.Footer>
-				<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
-				<Button type="submit" disabled={$submitting}>
-					{$submitting ? 'Saving...' : 'Save Changes'}
-				</Button>
-			</Dialog.Footer>
 		</form>
+		<Dialog.Footer class="border-t bg-muted p-6">
+			<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
+			<Button type="submit" form="edit-tool-form" disabled={$submitting}>
+				{$submitting ? 'Saving...' : 'Save Changes'}
+			</Button>
+		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

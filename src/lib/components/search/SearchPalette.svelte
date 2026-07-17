@@ -81,30 +81,26 @@
 			// console.log('categoryResults', categoryResults);
 
 			dbResults = [
-				...toolResults.map(
-					(t): SearchResultTool => ({
-						type: 'tool',
-						label: t.name,
-						tool: t,
-						action: () => {
-							selectedTool.set(t);
-							searchOpen.set(false);
-						}
-					})
-				),
+				...toolResults.map((t): SearchResultTool => ({
+					type: 'tool',
+					label: t.name,
+					tool: t,
+					action: () => {
+						selectedTool.set(t);
+						searchOpen.set(false);
+					}
+				})),
 
-				...categoryResults.map(
-					(c): SearchResultCategory => ({
-						type: 'category',
-						label: c.name,
-						categorySlug: c.slug,
-						path: `/category/${c.slug}`,
-						action: () => {
-							searchOpen.set(false);
-							tick().then(() => goto(`/category/${c.slug}`));
-						}
-					})
-				)
+				...categoryResults.map((c): SearchResultCategory => ({
+					type: 'category',
+					label: c.name,
+					categorySlug: c.slug,
+					path: `/category/${c.slug}`,
+					action: () => {
+						searchOpen.set(false);
+						tick().then(() => goto(`/category/${c.slug}`));
+					}
+				}))
 			];
 		} catch (e) {
 			if ((e as Error).name !== 'AbortError') console.error(e);

@@ -2,7 +2,7 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import Header from '$lib/components/header/Header.svelte';
-	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import * as Sidebar from '$lib/components/ui/sidebar/index';
 	import AppSidebar from '$lib/components/ui/sidebar/AppSidebar.svelte';
 	import { ModeWatcher } from 'mode-watcher';
 	import type { LayoutProps } from './$types';
@@ -10,6 +10,7 @@
 	import { Toaster } from '$lib/components/ui/sonner/index';
 	import ToolDetailDialog from '$lib/components/tool-detail-dialog/ToolDetailDialog.svelte';
 	import SearchPalette, { searchOpen } from '$lib/components/search/SearchPalette.svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip/index';
 
 	let { children, data }: LayoutProps = $props();
 
@@ -38,19 +39,21 @@
 
 <ModeWatcher />
 <Toaster richColors closeButton />
-<ToolDetailDialog data={data.editForm} />
 <SearchPalette />
 
 <div class="[--header-height:calc(--spacing(12))]">
 	<NavigationIndicator />
-	<Sidebar.Provider class="flex flex-col">
-		<Header categories={data.categories} />
+	<Tooltip.Provider>
+		<Sidebar.Provider class="flex flex-col">
+			<Header categories={data.categories} />
 
-		<div class="flex flex-1">
-			<AppSidebar categories={data.categories} />
-			<Sidebar.Inset>
-				{@render children()}
-			</Sidebar.Inset>
-		</div>
-	</Sidebar.Provider>
+			<div class="flex flex-1">
+				<AppSidebar categories={data.categories} />
+				<Sidebar.Inset>
+					{@render children()}
+				</Sidebar.Inset>
+			</div>
+		</Sidebar.Provider>
+		<ToolDetailDialog data={data.editForm} />
+	</Tooltip.Provider>
 </div>

@@ -4,11 +4,8 @@
 	import { Button } from '$lib/components/ui/button/index';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import { toast } from 'svelte-sonner';
-
-	const { current: isMobile } = new IsMobile();
-
+	import * as Tooltip from '$lib/components/ui/tooltip/index';
 	import type { Tool } from '$lib/types';
-	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 	import { selectedTool } from '$lib/stores/global-tool-dialog';
 
 	let { tool, open = $bindable(false) }: { tool: Tool; open: boolean } = $props();
@@ -17,10 +14,17 @@
 <AlertDialog.Root bind:open>
 	<AlertDialog.Trigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="destructive" size={isMobile ? 'icon-lg' : 'lg'}>
-				<Trash2 />
-				<span class="not-md:hidden">Delete</span>
-			</Button>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<Button {...props} variant="destructive" size="icon-lg">
+						<Trash2 />
+						<span class="sr-only">Delete</span>
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content sideOffset={6}>
+					<span>Delete</span>
+				</Tooltip.Content>
+			</Tooltip.Root>
 		{/snippet}
 	</AlertDialog.Trigger>
 	<AlertDialog.Content>

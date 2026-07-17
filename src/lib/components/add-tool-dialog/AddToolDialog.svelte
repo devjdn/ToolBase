@@ -53,22 +53,16 @@
 			{@render trigger(props)}
 		{/snippet}
 	</Dialog.Trigger>
-	<Dialog.Content class="lg:h-full lg:max-h-125 lg:max-w-4xl">
-		<Dialog.Header>
+	<Dialog.Content class="gap-0 p-0 lg:max-w-4xl">
+		<Dialog.Header class="p-6">
 			<Dialog.Title>Add to ToolBase</Dialog.Title>
 			<Dialog.Description class="max-w-prose">
 				To add a new tool to ToolBase, fill out the form below. Please try to avoid leaving any fields blank.
 			</Dialog.Description>
 		</Dialog.Header>
 
-		<form
-			method="POST"
-			action="/?/addTool"
-			enctype="multipart/form-data"
-			use:enhance
-			class="flex flex-col justify-between"
-		>
-			<div class="flex flex-col gap-y-6 py-3 not-lg:mb-8 lg:grid lg:grid-cols-2 lg:gap-x-12">
+		<form method="POST" action="/?/addTool" id="add-tool-form" enctype="multipart/form-data" use:enhance>
+			<div class="flex flex-col gap-y-6 p-6 not-lg:mb-8 lg:grid lg:grid-cols-2 lg:gap-x-12">
 				<Form.Field {form} name="name" class="lg:col-span-1">
 					<Form.Control>
 						{#snippet children({ props })}
@@ -101,7 +95,7 @@
 								{...props}
 								bind:value={$formData.description}
 								placeholder="A brief description..."
-								class="resize-none lg:flex-1 lg:overflow-y-auto"
+								class="max-h-47 resize-none lg:flex-1 lg:overflow-y-auto"
 								rows={3}
 							/>
 						{/snippet}
@@ -130,12 +124,12 @@
 					<Input name="logo" type="file" accept="image/webp,image/svg+xml" />
 				</div>
 			</div>
-			<Dialog.Footer>
-				<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
-				<Button type="submit" disabled={$submitting}>
-					{$submitting ? 'Adding...' : 'Add Tool'}
-				</Button>
-			</Dialog.Footer>
 		</form>
+		<Dialog.Footer class="border-t bg-muted p-6">
+			<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
+			<Button type="submit" form="add-tool-form" disabled={$submitting}>
+				{$submitting ? 'Adding...' : 'Add Tool'}
+			</Button>
+		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
