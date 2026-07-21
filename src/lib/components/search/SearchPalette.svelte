@@ -47,16 +47,16 @@
 				searchOpen.set(false);
 				tick().then(() => goto('/guide'));
 			}
-		},
-		{
-			type: 'page',
-			label: 'Request to Edit',
-			path: '/request-to-edit',
-			action: () => {
-				searchOpen.set(false);
-				tick().then(() => goto('/request-to-edit'));
-			}
 		}
+		// {
+		// 	type: 'page',
+		// 	label: 'Request to Edit',
+		// 	path: '/request-to-edit',
+		// 	action: () => {
+		// 		searchOpen.set(false);
+		// 		tick().then(() => goto('/request-to-edit'));
+		// 	}
+		// }
 	];
 
 	async function search(q: string) {

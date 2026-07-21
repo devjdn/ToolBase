@@ -13,3 +13,16 @@ export type Tool = {
 		slug: string;
 	} | null;
 };
+
+export type ReportedTool = {
+	reportId: string;
+	reason: string;
+	reportedAt: Date;
+	toolId: string | null;
+	toolName: string | null;
+	toolUrl: string | null;
+	categorySlug: string | null;
+	toolLogoUrl: string | null;
+	reporterEmail: string | null;
+	reporterName: string | null;
+};

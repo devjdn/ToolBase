@@ -208,6 +208,10 @@
 	html {
 		@apply font-sans;
 	}
+	html,
+	body {
+		@apply overscroll-y-none;
+	}
 }
 
 @keyframes progress {

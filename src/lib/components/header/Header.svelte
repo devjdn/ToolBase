@@ -8,7 +8,18 @@
 	import type { LayoutData } from '../../../routes/$types';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { useSidebar } from '../ui/sidebar';
-	import { LogIn, LogOut, Moon, Sun, Laptop, PanelLeft, PanelBottom, UserRound, UserRoundPen } from '@lucide/svelte';
+	import {
+		LogIn,
+		LogOut,
+		Shield,
+		Moon,
+		Sun,
+		Laptop,
+		PanelLeft,
+		PanelBottom,
+		UserRound
+		// UserRoundPen
+	} from '@lucide/svelte';
 	import { mode, setMode } from 'mode-watcher';
 	import { page } from '$app/state';
 	import { invalidateAll } from '$app/navigation';
@@ -110,10 +121,20 @@
 				{#if $session.data}
 					<DropdownMenu.Label>{$session.data.user.email}</DropdownMenu.Label>
 					<DropdownMenu.Group>
-						{#if !['editor', 'admin'].includes($session.data.user?.role ?? '')}
+						<!-- {#if !['editor', 'admin'].includes($session.data.user?.role ?? '')}
 							<DropdownMenu.Item>
 								<UserRoundPen />
 								<span>Request Editor Role</span>
+							</DropdownMenu.Item>
+						{/if} -->
+						{#if $session.data.user?.role === 'admin'}
+							<DropdownMenu.Item>
+								{#snippet child({ props })}
+									<a href="/admin" {...props}>
+										<Shield />
+										<span>Admin Dashboard</span>
+									</a>
+								{/snippet}
 							</DropdownMenu.Item>
 						{/if}
 						<DropdownMenu.Item variant="destructive" onclick={signOut}>
