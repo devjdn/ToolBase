@@ -4,6 +4,8 @@ import { db } from '$lib/server/db';
 import { reports, tools } from '$lib/server/db/schema';
 import * as z from 'zod/v4';
 import { eq } from 'drizzle-orm';
+import { removeLogo } from '$lib/server/storage';
+import { requireRole } from '$lib/server/guards';
 
 const reportFormSchema = z.object({
 	toolId: z.uuid(),
@@ -36,19 +38,13 @@ export const submitReport = form(reportFormSchema, async ({ toolId, reason }) =>
 const reportIdSchema = z.object({ reportId: z.uuid() });
 
 export const dismissReport = command(reportIdSchema, async ({ reportId }) => {
-	const event = getRequestEvent();
-	const session = await event.locals.getSession();
-
-	if (session?.user?.role !== 'admin') throw error(403, 'Forbidden');
+	await requireRole(['admin']);
 
 	await db.update(reports).set({ status: 'dismissed' }).where(eq(reports.id, reportId));
 });
 
 export const resolveReport = command(reportIdSchema, async ({ reportId }) => {
-	const event = getRequestEvent();
-	const session = await event.locals.getSession();
-
-	if (session?.user?.role !== 'admin') throw error(403, 'Forbidden');
+	await requireRole(['admin']);
 
 	await db.update(reports).set({ status: 'resolved' }).where(eq(reports.id, reportId));
 });
@@ -56,10 +52,23 @@ export const resolveReport = command(reportIdSchema, async ({ reportId }) => {
 const removeToolSchema = z.object({ toolId: z.uuid() });
 
 export const removeTool = command(removeToolSchema, async ({ toolId }) => {
-	const event = getRequestEvent();
-	const session = await event.locals.getSession();
+	await requireRole(['admin']);
 
-	if (session?.user?.role !== 'admin') throw error(403, 'Forbidden');
+	const [tool] = await db
+		.select({
+			logoUrl: tools.logoUrl
+		})
+		.from(tools)
+		.where(eq(tools.id, toolId))
+		.limit(1);
+
+	if (!tool) {
+		error(404, 'Tool not found in ToolBase');
+	}
 
 	await db.delete(tools).where(eq(tools.id, toolId));
+
+	await removeLogo(tool.logoUrl);
+
+	return { success: true };
 });

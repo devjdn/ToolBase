@@ -2,16 +2,12 @@
 	import type { ComponentProps } from 'svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { categoryIcons, defaultIcon } from '$lib/categoryIcons';
-	import type { LayoutData } from '../../../../routes/$types';
+	import { getCategories } from '$lib/remote-functions/categories.remote';
 	import { page } from '$app/state';
 	import clsx from 'clsx';
 	import { LayoutGrid, Signpost } from '@lucide/svelte';
 
-	let {
-		ref = $bindable(null),
-		categories,
-		...restProps
-	}: ComponentProps<typeof Sidebar.Root> & { categories: LayoutData['categories'] } = $props();
+	let { ref = $bindable(null), ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
 </script>
 
 <Sidebar.Root bind:ref class="top-(--header-height) h-[calc(100svh-var(--header-height))]!" {...restProps}>
@@ -47,24 +43,31 @@
 			<Sidebar.GroupLabel>Categories</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
-					{#each categories as category (category.id)}
-						{@const Icon = categoryIcons[category.slug] ?? defaultIcon}
-						<Sidebar.MenuItem>
-							<Sidebar.MenuButton variant={page.url.pathname === `/category/${category.slug}` ? 'primary' : 'ghost'}>
-								{#snippet child({ props })}
-									<a {...props} data-sveltekit-preload-code="hover" href="/category/{category.slug}">
-										<Icon size={16} />
-										<span>{category.name}</span>
-										<span
-											class={clsx('ml-auto text-xs text-neutral-400 tabular-nums', {
-												'text-white dark:text-black': page.url.pathname === `/category/${category.slug}`
-											})}>{category.toolCount}</span
-										>
-									</a>
-								{/snippet}
-							</Sidebar.MenuButton>
-						</Sidebar.MenuItem>
-					{/each}
+					<svelte:boundary>
+						{@const categories = await getCategories()}
+						{#each categories as category (category.id)}
+							{@const Icon = categoryIcons[category.slug] ?? defaultIcon}
+							<Sidebar.MenuItem>
+								<Sidebar.MenuButton variant={page.url.pathname === `/category/${category.slug}` ? 'primary' : 'ghost'}>
+									{#snippet child({ props })}
+										<a {...props} data-sveltekit-preload-code="hover" href="/category/{category.slug}">
+											<Icon size={16} />
+											<span>{category.name}</span>
+											<span
+												class={clsx('ml-auto text-xs text-neutral-400 tabular-nums', {
+													'text-white dark:text-black': page.url.pathname === `/category/${category.slug}`
+												})}>{category.toolCount}</span
+											>
+										</a>
+									{/snippet}
+								</Sidebar.MenuButton>
+							</Sidebar.MenuItem>
+						{/each}
+
+						{#snippet failed()}
+							<p class="px-2 text-xs text-muted-foreground">Couldn't load categories</p>
+						{/snippet}
+					</svelte:boundary>
 				</Sidebar.Menu>
 			</Sidebar.GroupContent>
 		</Sidebar.Group>

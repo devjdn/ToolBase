@@ -9,6 +9,7 @@
 	import { toast } from 'svelte-sonner';
 	import { selectedTool } from '$lib/stores/global-tool-dialog';
 	import * as Tooltip from '$lib/components/ui/tooltip/index';
+	import { isHttpError } from '@sveltejs/kit';
 
 	let { tool }: { tool: Tool } = $props();
 	let open = $state(false);
@@ -22,19 +23,17 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Trigger>
-		{#snippet child({ props })}
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					<Button {...props} variant="destructive" size="icon-lg">
-						<Flag />
-						<span class="sr-only">Report</span>
-					</Button>
-				</Tooltip.Trigger>
-				<Tooltip.Content sideOffset={6}>
-					<span>Report</span>
-				</Tooltip.Content>
-			</Tooltip.Root>
-		{/snippet}
+		<Tooltip.Root>
+			<Tooltip.Trigger>
+				<Button variant="destructive" size="icon-lg">
+					<Flag />
+					<span class="sr-only">Report</span>
+				</Button>
+			</Tooltip.Trigger>
+			<Tooltip.Content sideOffset={6}>
+				<span>Report</span>
+			</Tooltip.Content>
+		</Tooltip.Root>
 	</Dialog.Trigger>
 	<Dialog.Content class="gap-0 p-0 lg:max-w-xl">
 		<Dialog.Header class="p-6">
@@ -46,17 +45,16 @@
 			id="report-form"
 			class="flex flex-col gap-6 p-6"
 			{...submitReport.enhance(async (form) => {
-				submitReport.fields.toolId.set(tool.id);
 				try {
 					if (await form.submit()) {
 						open = false;
 						toast.success('Report submitted. Thank you for the heads up!');
 						selectedTool.set(null);
 					} else {
-						toast.error('Submission failed. Please check the forms for any errors.');
+						toast.error('Submission failed. Please check the form for any errors.');
 					}
-				} catch (error) {
-					toast.error('Failed to submit report. Please try again.');
+				} catch (e) {
+					toast.error(isHttpError(e) ? e.body.message : 'Failed to submit report. Please try again.');
 				}
 			})}
 		>
@@ -70,15 +68,16 @@
 					placeholder="Please tell us what is wrong with this tool..."
 					rows={4}
 					class="h-48 resize-none"
+					id="reason"
 				/>
 
-				{#each submitReport.fields.reason.issues() ?? [] as issue (issue.path)}
+				{#each submitReport.fields.reason.issues() ?? [] as issue (issue.message)}
 					<p class="text-sm text-destructive">{issue.message}</p>
 				{/each}
 			</div>
 		</form>
 
-		<Dialog.Footer class="border-t bg-muted p-6">
+		<Dialog.Footer class="p-6">
 			<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
 			<Button type="submit" form="report-form" disabled={!!submitReport.pending}>
 				{submitReport.pending ? 'Submitting...' : 'Submit Report'}

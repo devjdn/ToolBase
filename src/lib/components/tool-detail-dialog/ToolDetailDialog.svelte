@@ -6,17 +6,9 @@
 	import { scale } from 'svelte/transition';
 	import DeleteToolButton from '../delete-tool/DeleteToolButton.svelte';
 	import EditToolDialog from '../edit-tool/EditToolDialog.svelte';
-	import type { EditToolSchema } from '$lib/zod-schemas';
-	import type { SuperValidated } from 'sveltekit-superforms';
 	import { page } from '$app/state';
 	import { selectedTool } from '$lib/stores/global-tool-dialog';
 	import ReportToolDialog from '../report-tool-dialog/ReportToolDialog.svelte';
-
-	let {
-		data
-	}: {
-		data: SuperValidated<EditToolSchema>;
-	} = $props();
 
 	let open = $state(false);
 
@@ -104,7 +96,7 @@
 					</Tooltip.Root>
 
 					{#if page.data.user && ['editor', 'admin'].includes(page.data.user?.role ?? '')}
-						<EditToolDialog tool={$selectedTool} {data} />
+						<EditToolDialog tool={$selectedTool} />
 						<DeleteToolButton {open} tool={$selectedTool} />
 					{/if}
 

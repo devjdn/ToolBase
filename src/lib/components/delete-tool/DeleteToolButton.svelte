@@ -1,14 +1,39 @@
 <script lang="ts">
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index';
-	import { enhance } from '$app/forms';
 	import { Button } from '$lib/components/ui/button/index';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import { toast } from 'svelte-sonner';
 	import * as Tooltip from '$lib/components/ui/tooltip/index';
 	import type { Tool } from '$lib/types';
 	import { selectedTool } from '$lib/stores/global-tool-dialog';
+	import { page } from '$app/state';
+	import { invalidateAll } from '$app/navigation';
+	import { deleteTool, getTools } from '$lib/remote-functions/tools.remote';
+	import { getCategories } from '$lib/remote-functions/categories.remote';
+	import { getPageNumber } from '$lib/utils';
 
 	let { tool, open = $bindable(false) }: { tool: Tool; open: boolean } = $props();
+
+	let deleting = $state(false);
+
+	async function handleDelete() {
+		deleting = true;
+		try {
+			const onHome = page.url.pathname === '/';
+			await deleteTool(tool.id).updates(
+				getCategories(),
+				...(onHome ? [getTools({ page: getPageNumber(page.url) })] : [])
+			);
+			await invalidateAll(); // bridge: remove once category/search/admin are on remote functions
+			open = false;
+			selectedTool.set(null);
+			toast.success(`${tool.name} deleted successfully`);
+		} catch {
+			toast.error(`Failed to delete ${tool.name}`);
+		} finally {
+			deleting = false;
+		}
+	}
 </script>
 
 <AlertDialog.Root bind:open>
@@ -35,27 +60,10 @@
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
-			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-			<form
-				method="POST"
-				action="/?/deleteTool"
-				use:enhance={() => {
-					return async ({ result, update }) => {
-						if (result.type === 'success') {
-							open = false;
-							toast.success(`${tool.name} deleted successfully`);
-							selectedTool.set(null);
-							await update();
-						} else {
-							toast.error(`Failed to delete ${tool.name}`);
-							await update();
-						}
-					};
-				}}
-			>
-				<input type="hidden" name="id" value={tool.id} />
-				<AlertDialog.Action type="submit">Delete</AlertDialog.Action>
-			</form>
+			<AlertDialog.Cancel disabled={deleting}>Cancel</AlertDialog.Cancel>
+			<Button variant="destructive" onclick={handleDelete} disabled={deleting}>
+				{deleting ? 'Deleting…' : 'Delete'}
+			</Button>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

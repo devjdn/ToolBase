@@ -7,13 +7,14 @@ export default defineConfig({
 	plugins: [
 		tailwindcss(),
 		sveltekit(),
-		process.env.ANALYZE &&
-			visualizer({
-				open: true,
-				gzipSize: true,
-				brotliSize: true,
-				filename: 'stats.html'
-			})
+		process.env.ANALYZE
+			? visualizer({
+					open: true,
+					gzipSize: true,
+					brotliSize: true,
+					filename: 'stats.html'
+				})
+			: undefined
 	],
 	server: {
 		allowedHosts: ['quality-national-roughy.ngrok-free.app']

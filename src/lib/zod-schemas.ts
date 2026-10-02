@@ -11,6 +11,21 @@ export const editToolSchema = addToolSchema.extend({
 	id: z.uuid()
 });
 
+const logoFileSchema = z
+	.instanceof(File)
+	.optional()
+	.refine(
+		(f) => !f || f.size === 0 || ['image/webp', 'image/svg+xml'].includes(f.type),
+		'Logo must be a WebP or SVG file'
+	);
+
+export const addToolFormSchema = addToolSchema.extend({
+	logo: logoFileSchema
+});
+export const editToolFormSchema = editToolSchema.extend({
+	logo: logoFileSchema
+});
+
 export const reportSchema = z.object({
 	toolId: z.uuid(),
 	reason: z.string().min(10, 'Please provide a reason for reporting this tool').max(100),

@@ -1,9 +1,11 @@
 <script lang="ts">
 	import ToolCard from '$lib/components/tool-card/ToolCard.svelte';
-	import ToolCardSkeleton from '$lib/components/tool-card/ToolCardSkeleton.svelte';
 	import PaginationBar from '$lib/components/pagination/PaginationBar.svelte';
-	import type { PageProps } from './$types';
-	let { data }: PageProps = $props();
+	import { page } from '$app/state';
+	import { getTools } from '$lib/remote-functions/tools.remote';
+	import { getPageNumber } from '$lib/utils';
+
+	const pageNumber = $derived(getPageNumber(page.url));
 </script>
 
 <svelte:head>
@@ -15,17 +17,9 @@
 		<h1 class="text-[clamp(1.8rem,1.1rem+2vw,2rem)] font-semibold tracking-tight">Home</h1>
 	</section>
 
-	{#await data.tools}
-		<section class="tools-section flex-1">
-			<ul class="grid grid-cols-2 gap-4 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5">
-				{#each { length: 8 } as _, i (i)}
-					<li>
-						<ToolCardSkeleton />
-					</li>
-				{/each}
-			</ul>
-		</section>
-	{:then tools}
+	<svelte:boundary>
+		{@const { tools, pagination } = await getTools({ page: pageNumber })}
+
 		{#if tools.length === 0}
 			<div class="flex flex-1 flex-col items-center justify-center gap-1 leading-tight">
 				<p class="text-sm font-medium">No tools yet</p>
@@ -42,18 +36,14 @@
 				</ul>
 			</section>
 
-			{#await data.pagination then pagination}
-				<PaginationBar
-					currentPage={pagination.page}
-					totalPages={pagination.totalPages}
-					pageSize={pagination.pageSize}
-				/>
-			{/await}
+			<PaginationBar currentPage={pagination.page} totalPages={pagination.totalPages} pageSize={pagination.pageSize} />
 		{/if}
-	{:catch}
-		<div class="flex flex-1 flex-col items-center justify-center gap-1 leading-tight">
-			<p class="text-sm font-medium">Something went wrong</p>
-			<p class="text-xs text-muted-foreground">Failed to load tools</p>
-		</div>
-	{/await}
+
+		{#snippet failed()}
+			<div class="flex flex-1 flex-col items-center justify-center gap-1 leading-tight">
+				<p class="text-sm font-medium">Something went wrong</p>
+				<p class="text-xs text-muted-foreground">Failed to load tools</p>
+			</div>
+		{/snippet}
+	</svelte:boundary>
 </div>

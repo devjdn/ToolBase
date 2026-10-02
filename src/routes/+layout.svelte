@@ -9,10 +9,17 @@
 	import NavigationIndicator from '$lib/components/navigation-indicator/NavigationIndicator.svelte';
 	import { Toaster } from '$lib/components/ui/sonner/index';
 	import ToolDetailDialog from '$lib/components/tool-detail-dialog/ToolDetailDialog.svelte';
-	import SearchPalette, { searchOpen } from '$lib/components/search/SearchPalette.svelte';
+	import { searchOpen } from '$lib/stores/search';
 	import * as Tooltip from '$lib/components/ui/tooltip/index';
+	import { onMount, type Component } from 'svelte';
 
 	let { children, data }: LayoutProps = $props();
+
+	let SearchPalette = $state<Component | null>(null);
+
+	onMount(async () => {
+		SearchPalette = (await import('$lib/components/search/SearchPalette.svelte')).default;
+	});
 
 	function handleKeyDown(e: KeyboardEvent) {
 		if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -39,21 +46,23 @@
 
 <ModeWatcher />
 <Toaster richColors closeButton />
-<SearchPalette />
+{#if SearchPalette}
+	<SearchPalette />
+{/if}
 
 <div class="[--header-height:calc(--spacing(12))]">
 	<NavigationIndicator />
 	<Tooltip.Provider>
 		<Sidebar.Provider class="flex flex-col">
-			<Header categories={data.categories} />
+			<Header user={data.user} />
 
 			<div class="flex flex-1">
-				<AppSidebar categories={data.categories} />
+				<AppSidebar />
 				<Sidebar.Inset>
 					{@render children()}
 				</Sidebar.Inset>
 			</div>
 		</Sidebar.Provider>
-		<ToolDetailDialog data={data.editForm} />
+		<ToolDetailDialog />
 	</Tooltip.Provider>
 </div>

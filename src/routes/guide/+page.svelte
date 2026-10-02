@@ -88,8 +88,7 @@
 </div>
 
 <style>
-	@import 'tailwindcss';
-	@import '../layout.css';
+	@reference '../layout.css';
 
 	p,
 	li {

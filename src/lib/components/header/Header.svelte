@@ -3,33 +3,18 @@
 	import { Button } from '../ui/button/index';
 	import * as Avatar from '../ui/avatar/index';
 	import { authClient } from '$lib/auth-client';
-	import { Skeleton } from '../ui/skeleton/index';
 	import AddToolDialog from '../add-tool-dialog/AddToolDialog.svelte';
-	import type { LayoutData } from '../../../routes/$types';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { useSidebar } from '../ui/sidebar';
-	import {
-		LogIn,
-		LogOut,
-		Shield,
-		Moon,
-		Sun,
-		Laptop,
-		PanelLeft,
-		PanelBottom,
-		UserRound
-		// UserRoundPen
-	} from '@lucide/svelte';
+	import { LogIn, LogOut, Shield, Moon, Sun, Laptop, PanelLeft, PanelBottom, UserRound } from '@lucide/svelte';
 	import { mode, setMode } from 'mode-watcher';
-	import { page } from '$app/state';
 	import { invalidateAll } from '$app/navigation';
 	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 	import SearchTrigger from '../search/SearchTrigger.svelte';
 	import Separator from '../ui/separator/separator.svelte';
+	import type { LayoutData } from '../../../routes/$types';
 
-	let { categories }: { categories: LayoutData['categories'] } = $props();
-
-	const session = authClient.useSession();
+	let { user }: { user: LayoutData['user'] } = $props();
 
 	async function signOut() {
 		await authClient.signOut();
@@ -64,8 +49,8 @@
 	<div class="flex items-center justify-end gap-1.5">
 		<SearchTrigger />
 
-		{#if $session.data}
-			<AddToolDialog data={page.data.addForm} {categories}>
+		{#if user}
+			<AddToolDialog>
 				{#snippet trigger(props)}
 					<Button size={isMobile.current ? 'icon' : 'default'} {...props}>
 						<PlusIcon absoluteStrokeWidth strokeWidth={2.5} />
@@ -78,15 +63,13 @@
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger aria-label="Account & Settings">
 				{#snippet child({ props })}
-					{#if $session.data}
+					{#if user}
 						<Avatar.Root class="size-8 cursor-pointer border" {...props}>
-							<Avatar.Image src={$session.data!.user.image ?? ''} alt={$session.data!.user.name} />
+							<Avatar.Image src={user!.image ?? ''} alt={user!.name} />
 							<Avatar.Fallback class="text-xs">
-								{$session.data!.user.name?.charAt(0).toUpperCase()}
+								{user!.name?.charAt(0).toUpperCase()}
 							</Avatar.Fallback>
 						</Avatar.Root>
-					{:else if $session.isPending}
-						<Skeleton class="size-8 rounded-full border" />
 					{:else}
 						<Button {...props} variant="secondary" size="icon"><UserRound /></Button>
 					{/if}
@@ -118,16 +101,16 @@
 
 				<DropdownMenu.Separator />
 
-				{#if $session.data}
-					<DropdownMenu.Label>{$session.data.user.email}</DropdownMenu.Label>
+				{#if user}
+					<DropdownMenu.Label>{user.email}</DropdownMenu.Label>
 					<DropdownMenu.Group>
-						<!-- {#if !['editor', 'admin'].includes($session.data.user?.role ?? '')}
+						<!-- {#if !['editor', 'admin'].includes(user.user?.role ?? '')}
 							<DropdownMenu.Item>
 								<UserRoundPen />
 								<span>Request Editor Role</span>
 							</DropdownMenu.Item>
 						{/if} -->
-						{#if $session.data.user?.role === 'admin'}
+						{#if user.role === 'admin'}
 							<DropdownMenu.Item>
 								{#snippet child({ props })}
 									<a href="/admin" {...props}>

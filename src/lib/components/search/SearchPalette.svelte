@@ -1,13 +1,9 @@
-<script module>
-	import { writable } from 'svelte/store';
-	export const searchOpen = writable(false);
-</script>
-
 <script lang="ts">
 	import * as Dialog from '../ui/dialog/index';
 	import Search from '@lucide/svelte/icons/search';
 	import * as Kbd from '../ui/kbd/index';
 	import SearchResults from './SearchResults.svelte';
+	import { searchOpen } from '$lib/stores/search';
 	import type {
 		SearchApiResponse,
 		SearchResult,
