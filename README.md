@@ -1,42 +1,8 @@
-# sv
+# ToolBase
+> ToolBase is a personal directory I created in order to organise and keep note of all the tools I have used or encountered on my web development journey.
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## Why I created it
+I created this application because I hated the fact I needed to remember links to docs, names of tools I was using, or ideas for tools I could use to solve certain issues. You may think "just use bookmarks?", which is a perfectly reasonable thought. However, I'm a bit particular in how I like to use my bookmarks, that being for non-work related things that I need to keep track of; I want to try and have a clear separation of concerns between things I want to remember, and ToolBase was a part of that.
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-pnpm dlx sv@0.15.4 create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:vercel" tailwindcss="plugins:typography,forms" better-auth="demo:github" drizzle="database:postgresql+postgresql:postgres.js+docker:no" --install pnpm ToolBase
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## What I built it with
+ToolBase was built using SvelteKit/Svelte, Tailwind, and Drizzle as my ORM on top of PostgreSQL with Supabase, with object storage also via Supabase for the images encountered throughout the site, Lucide is used as the icon library, and it is hosted on Vercel.
