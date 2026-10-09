@@ -15,7 +15,7 @@ const handlePreload: Handle = async ({ event, resolve }) => {
 			if (input.type === 'js' || input.type === 'css') return true;
 
 			if (input.type === 'font') {
-				return input.filename.startsWith('src/lib/assets/fonts/') && input.filename.endsWith('.woff2');
+				return input.filename.startsWith('src/lib/fonts/') && input.filename.endsWith('.woff2');
 			}
 
 			return false;
