@@ -1,0 +1,13 @@
+diff --git a/dist/internal/animations-complete.js b/dist/internal/animations-complete.js
+index 15adb3359fd075b24bcca025e7c6afb14a4bcf40..ac71e9791c134249fa074167d84a1548e58068a7 100644
+--- a/dist/internal/animations-complete.js
++++ b/dist/internal/animations-complete.js
+@@ -92,7 +92,7 @@ export class AnimationsComplete {
+         const execute = () => {
+             fn();
+         };
+-        if (this.#opts.afterTick) {
++        if (this.#opts.afterTick.current) {
+             afterTick(execute);
+         }
+         else {
