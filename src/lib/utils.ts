@@ -12,4 +12,4 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
 
-export const getPageNumber = (url: URL) => Math.max(1, Number(url.searchParams.get('page') ?? 1));
+export const getPageNumber = (params: Pick<URLSearchParams, 'get'>) => Math.max(1, Number(params.get('page') ?? 1));

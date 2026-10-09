@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types';
-import { db } from '$lib/server/db';
+import { db } from '#lib/server/db/index.js';
 import { eq, and, desc, count } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
-import { tools, categories } from '$lib/server/db/schema';
+import { tools, categories } from '#lib/server/db/schema.js';
 
 export const load: PageServerLoad = async ({ params, url }) => {
 	const page = Math.max(1, Number(url.searchParams.get('page') ?? 1));

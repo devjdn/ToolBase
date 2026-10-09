@@ -7,8 +7,8 @@
 	import { Skeleton } from '../ui/skeleton';
 	import { isHttpError } from '@sveltejs/kit';
 	import { toast } from 'svelte-sonner';
-	import { getCategories } from '$lib/remote-functions/categories.remote';
-	import { addTool } from '$lib/remote-functions/tools.remote';
+	import { getCategories } from '#lib/remote-functions/categories.remote.js';
+	import { addTool } from '#lib/remote-functions/tools.remote.js';
 	import type { Snippet } from 'svelte';
 
 	let { trigger }: { trigger: Snippet<[Record<string, unknown>]> } = $props();

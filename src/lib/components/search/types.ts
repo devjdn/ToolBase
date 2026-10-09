@@ -1,4 +1,4 @@
-import type { Tool } from '$lib/types';
+import type { Tool } from '#lib/types.js';
 
 export type SearchApiResponse = {
 	toolResults: Array<Tool>;

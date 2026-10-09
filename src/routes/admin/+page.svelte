@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ReportAccordion from '$lib/components/report-accordion/ReportAccordion.svelte';
-	import { Skeleton } from '$lib/components/ui/skeleton/index';
+	import ReportAccordion from '#lib/components/report-accordion/ReportAccordion.svelte';
+	import { Skeleton } from '#lib/components/ui/skeleton/index.js';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();

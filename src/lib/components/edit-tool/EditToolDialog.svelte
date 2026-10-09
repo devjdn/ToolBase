@@ -9,10 +9,10 @@
 	import { Pencil } from '@lucide/svelte';
 	import { isHttpError } from '@sveltejs/kit';
 	import { toast } from 'svelte-sonner';
-	import type { Tool } from '$lib/types';
-	import { selectedTool } from '$lib/stores/global-tool-dialog';
-	import { getCategories } from '$lib/remote-functions/categories.remote';
-	import { editTool } from '$lib/remote-functions/tools.remote';
+	import type { Tool } from '#lib/types.js';
+	import { selectedTool } from '#lib/stores/global-tool-dialog.js';
+	import { getCategories } from '#lib/remote-functions/categories.remote.js';
+	import { editTool } from '#lib/remote-functions/tools.remote.js';
 
 	let { tool }: { tool: Tool } = $props();
 	let open = $state(false);

@@ -3,7 +3,7 @@
 	import Search from '@lucide/svelte/icons/search';
 	import * as Kbd from '../ui/kbd/index';
 	import SearchResults from './SearchResults.svelte';
-	import { searchOpen } from '$lib/stores/search';
+	import { searchOpen } from '#lib/stores/search.js';
 	import type {
 		SearchApiResponse,
 		SearchResult,
@@ -11,10 +11,10 @@
 		SearchResultPage,
 		SearchResultTool
 	} from './types';
-	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
+	import { IsMobile } from '#lib/hooks/is-mobile.svelte.js';
 	import { goto } from '$app/navigation';
 	import { tick } from 'svelte';
-	import { selectedTool } from '$lib/stores/global-tool-dialog';
+	import { selectedTool } from '#lib/stores/global-tool-dialog.js';
 
 	const isMobile = new IsMobile();
 

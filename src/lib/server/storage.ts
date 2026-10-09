@@ -1,4 +1,4 @@
-import { supabase } from '$lib/server/supabase';
+import { supabase } from '#lib/server/supabase.js';
 
 const BUCKET = 'ToolBase Images';
 

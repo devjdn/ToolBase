@@ -1,7 +1,7 @@
 <script lang="ts">
-	import ToolCard from '$lib/components/tool-card/ToolCard.svelte';
-	import ToolCardSkeleton from '$lib/components/tool-card/ToolCardSkeleton.svelte';
-	import PaginationBar from '$lib/components/pagination/PaginationBar.svelte';
+	import ToolCard from '#lib/components/tool-card/ToolCard.svelte';
+	import ToolCardSkeleton from '#lib/components/tool-card/ToolCardSkeleton.svelte';
+	import PaginationBar from '#lib/components/pagination/PaginationBar.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -19,7 +19,7 @@
 
 	{#await data.tools}
 		<section class="tools-section flex-1">
-			<ul class="grid grid-cols-2 gap-4 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5">
+			<ul class="grid grid-cols-2 gap-x-4 gap-y-6 @3xl:grid-cols-3 @5xl:grid-cols-5">
 				{#each { length: 8 } as _, i (i)}
 					<li>
 						<ToolCardSkeleton />
@@ -35,7 +35,7 @@
 			</div>
 		{:else}
 			<section class="tools-section flex-1">
-				<ul class="grid grid-cols-2 gap-4 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5">
+				<ul class="grid grid-cols-2 gap-x-4 gap-y-6 @3xl:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5">
 					{#each tools as tool (tool.id)}
 						<li>
 							<ToolCard {tool} />

@@ -1,14 +1,14 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog/index';
-	import { Button } from '$lib/components/ui/button/index';
-	import { submitReport } from '$lib/remote-functions/reports.remote';
-	import type { Tool } from '$lib/types';
+	import * as Dialog from '#lib/components/ui/dialog/index.js';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import { submitReport } from '#lib/remote-functions/reports.remote.js';
+	import type { Tool } from '#lib/types.js';
 	import Flag from '@lucide/svelte/icons/flag';
-	import { Label } from '$lib/components/ui/label/index';
-	import { Textarea } from '$lib/components/ui/textarea/index';
+	import { Label } from '#lib/components/ui/label/index.js';
+	import { Textarea } from '#lib/components/ui/textarea/index.js';
 	import { toast } from 'svelte-sonner';
-	import { selectedTool } from '$lib/stores/global-tool-dialog';
-	import * as Tooltip from '$lib/components/ui/tooltip/index';
+	import { selectedTool } from '#lib/stores/global-tool-dialog.js';
+	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
 	import { isHttpError } from '@sveltejs/kit';
 
 	let { tool }: { tool: Tool } = $props();

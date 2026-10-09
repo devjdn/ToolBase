@@ -1,16 +1,16 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
-	import Header from '$lib/components/header/Header.svelte';
-	import * as Sidebar from '$lib/components/ui/sidebar/index';
-	import AppSidebar from '$lib/components/ui/sidebar/AppSidebar.svelte';
+	import favicon from '#lib/assets/favicon.svg';
+	import Header from '#lib/components/header/Header.svelte';
+	import * as Sidebar from '#lib/components/ui/sidebar/index.js';
+	import AppSidebar from '#lib/components/ui/sidebar/AppSidebar.svelte';
 	import { ModeWatcher } from 'mode-watcher';
 	import type { LayoutProps } from './$types';
-	import NavigationIndicator from '$lib/components/navigation-indicator/NavigationIndicator.svelte';
-	import { Toaster } from '$lib/components/ui/sonner/index';
-	import ToolDetailDialog from '$lib/components/tool-detail-dialog/ToolDetailDialog.svelte';
-	import { searchOpen } from '$lib/stores/search';
-	import * as Tooltip from '$lib/components/ui/tooltip/index';
+	import NavigationIndicator from '#lib/components/navigation-indicator/NavigationIndicator.svelte';
+	import { Toaster } from '#lib/components/ui/sonner/index.js';
+	import ToolDetailDialog from '#lib/components/tool-detail-dialog/ToolDetailDialog.svelte';
+	import { searchOpen } from '#lib/stores/search.js';
+	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
 	import { onMount, type Component } from 'svelte';
 
 	let { children, data }: LayoutProps = $props();
@@ -18,7 +18,7 @@
 	let SearchPalette = $state<Component | null>(null);
 
 	onMount(async () => {
-		SearchPalette = (await import('$lib/components/search/SearchPalette.svelte')).default;
+		SearchPalette = (await import('#lib/components/search/SearchPalette.svelte')).default;
 	});
 
 	function handleKeyDown(e: KeyboardEvent) {

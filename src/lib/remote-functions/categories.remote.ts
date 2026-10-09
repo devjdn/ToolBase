@@ -1,7 +1,7 @@
 import { query } from '$app/server';
 import { and, asc, count, eq } from 'drizzle-orm';
-import { db } from '$lib/server/db';
-import { categories, tools } from '$lib/server/db/schema';
+import { db } from '#lib/server/db/index.js';
+import { categories, tools } from '#lib/server/db/schema.js';
 
 export const getCategories = query(async () => {
 	return db

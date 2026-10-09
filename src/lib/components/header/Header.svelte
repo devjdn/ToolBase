@@ -2,14 +2,14 @@
 	import * as DropdownMenu from '../ui/dropdown-menu/index';
 	import { Button } from '../ui/button/index';
 	import * as Avatar from '../ui/avatar/index';
-	import { authClient } from '$lib/auth-client';
+	import { authClient } from '#lib/auth-client.js';
 	import AddToolDialog from '../add-tool-dialog/AddToolDialog.svelte';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { useSidebar } from '../ui/sidebar';
 	import { LogIn, LogOut, Shield, Moon, Sun, Laptop, PanelLeft, PanelBottom, UserRound } from '@lucide/svelte';
 	import { mode, setMode } from 'mode-watcher';
 	import { invalidateAll } from '$app/navigation';
-	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
+	import { IsMobile } from '#lib/hooks/is-mobile.svelte.js';
 	import SearchTrigger from '../search/SearchTrigger.svelte';
 	import Separator from '../ui/separator/separator.svelte';
 	import type { LayoutData } from '../../../routes/$types';

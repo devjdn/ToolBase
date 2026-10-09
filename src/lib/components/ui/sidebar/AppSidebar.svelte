@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';
-	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import { categoryIcons, defaultIcon } from '$lib/categoryIcons';
-	import { getCategories } from '$lib/remote-functions/categories.remote';
+	import * as Sidebar from '#lib/components/ui/sidebar/index.js';
+	import { categoryIcons, defaultIcon } from '#lib/categoryIcons.js';
+	import { getCategories } from '#lib/remote-functions/categories.remote.js';
 	import { page } from '$app/state';
 	import clsx from 'clsx';
 	import { LayoutGrid, Signpost } from '@lucide/svelte';
