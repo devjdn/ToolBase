@@ -1,14 +1,14 @@
 <script lang="ts">
-	import * as Accordion from '$lib/components/ui/accordion/index';
-	import type { ReportedTool } from '$lib/types';
-	import { cn } from '$lib/utils';
+	import * as Accordion from '#lib/components/ui/accordion/index.js';
+	import type { ReportedTool } from '#lib/types.js';
+	import { cn } from '#lib/utils.js';
 	import type { ClassValue } from 'tailwind-variants';
 	import { Button } from '../ui/button/index';
 	import { Check, Trash2, X } from '@lucide/svelte';
-	import { resolveReport, dismissReport, removeTool } from '$lib/remote-functions/reports.remote';
+	import { resolveReport, dismissReport, removeTool } from '#lib/remote-functions/reports.remote.js';
 	import { toast } from 'svelte-sonner';
 	import { invalidateAll } from '$app/navigation';
-	import { categoryIcons, defaultIcon } from '$lib/categoryIcons';
+	import { categoryIcons, defaultIcon } from '#lib/categoryIcons.js';
 
 	let { reportedTools }: { reportedTools: ReportedTool[] } = $props();
 

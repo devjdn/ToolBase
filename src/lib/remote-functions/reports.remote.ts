@@ -1,11 +1,11 @@
 import { command, form, getRequestEvent } from '$app/server';
 import { error } from '@sveltejs/kit';
-import { db } from '$lib/server/db';
-import { reports, tools } from '$lib/server/db/schema';
+import { db } from '#lib/server/db/index.js';
+import { reports, tools } from '#lib/server/db/schema.js';
 import * as z from 'zod/v4';
 import { eq } from 'drizzle-orm';
-import { removeLogo } from '$lib/server/storage';
-import { requireRole } from '$lib/server/guards';
+import { removeLogo } from '#lib/server/storage.js';
+import { requireRole } from '#lib/server/guards.js';
 
 const reportFormSchema = z.object({
 	toolId: z.uuid(),

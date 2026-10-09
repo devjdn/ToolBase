@@ -1,12 +1,12 @@
 import { query, command, form } from '$app/server';
 import { z } from 'zod';
 import { count, desc, eq } from 'drizzle-orm';
-import { db } from '$lib/server/db';
-import { tools, categories } from '$lib/server/db/schema';
-import { requireRole, requireUser } from '$lib/server/guards';
+import { db } from '#lib/server/db/index.js';
+import { tools, categories } from '#lib/server/db/schema.js';
+import { requireRole, requireUser } from '#lib/server/guards.js';
 import { error, invalid } from '@sveltejs/kit';
-import { uploadLogo, removeLogo } from '$lib/server/storage';
-import { addToolFormSchema, editToolFormSchema } from '$lib/zod-schemas';
+import { uploadLogo, removeLogo } from '#lib/server/storage.js';
+import { addToolFormSchema, editToolFormSchema } from '#lib/zod-schemas.js';
 
 const PAGE_SIZE = 24;
 

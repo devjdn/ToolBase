@@ -1,16 +1,16 @@
 <script lang="ts">
-	import * as AlertDialog from '$lib/components/ui/alert-dialog/index';
-	import { Button } from '$lib/components/ui/button/index';
+	import * as AlertDialog from '#lib/components/ui/alert-dialog/index.js';
+	import { Button } from '#lib/components/ui/button/index.js';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import { toast } from 'svelte-sonner';
-	import * as Tooltip from '$lib/components/ui/tooltip/index';
-	import type { Tool } from '$lib/types';
-	import { selectedTool } from '$lib/stores/global-tool-dialog';
+	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
+	import type { Tool } from '#lib/types.js';
+	import { selectedTool } from '#lib/stores/global-tool-dialog.js';
 	import { page } from '$app/state';
-	import { invalidateAll } from '$app/navigation';
-	import { deleteTool, getTools } from '$lib/remote-functions/tools.remote';
-	import { getCategories } from '$lib/remote-functions/categories.remote';
-	import { getPageNumber } from '$lib/utils';
+	import { refreshAll } from '$app/navigation';
+	import { deleteTool, getTools } from '#lib/remote-functions/tools.remote.js';
+	import { getCategories } from '#lib/remote-functions/categories.remote.js';
+	import { getPageNumber } from '#lib/utils.js';
 
 	let { tool, open = $bindable(false) }: { tool: Tool; open: boolean } = $props();
 
@@ -22,9 +22,9 @@
 			const onHome = page.url.pathname === '/';
 			await deleteTool(tool.id).updates(
 				getCategories(),
-				...(onHome ? [getTools({ page: getPageNumber(page.url) })] : [])
+				...(onHome ? [getTools({ page: getPageNumber(page.url.searchParams) })] : [])
 			);
-			await invalidateAll(); // bridge: remove once category/search/admin are on remote functions
+			await refreshAll(); // bridge: remove once category/search/admin are on remote functions
 			open = false;
 			selectedTool.set(null);
 			toast.success(`${tool.name} deleted successfully`);

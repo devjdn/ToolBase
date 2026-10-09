@@ -2,7 +2,7 @@
 	import type { SearchResult, SearchResultType } from './types';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import Folder from '@lucide/svelte/icons/folder';
-	import { categoryIcons, defaultIcon } from '$lib/categoryIcons';
+	import { categoryIcons, defaultIcon } from '#lib/categoryIcons.js';
 	import Button from '../ui/button/button.svelte';
 	import { tick } from 'svelte';
 	import { Skeleton } from '../ui/skeleton/index';

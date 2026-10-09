@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from '$lib/utils.js';
+	import { cn, type WithElementRef } from '#lib/utils.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { useSidebar } from './context.svelte.js';
-	import * as Drawer from '$lib/components/ui/drawer/index.js';
+	import * as Drawer from '#lib/components/ui/drawer/index.js';
 
 	let {
 		ref = $bindable(null),

@@ -2,7 +2,7 @@
 	import Search from '@lucide/svelte/icons/search';
 	import Button from '../ui/button/button.svelte';
 	import * as Kbd from '../ui/kbd/index';
-	import { searchOpen } from '$lib/stores/search';
+	import { searchOpen } from '#lib/stores/search.js';
 </script>
 
 <Button variant="ghost" size="icon" class="md:hidden" aria-label="Search ToolBase" onclick={() => searchOpen.set(true)}>

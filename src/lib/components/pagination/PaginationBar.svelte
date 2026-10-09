@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Pagination from '$lib/components/ui/pagination/index';
+	import * as Pagination from '#lib/components/ui/pagination/index.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -14,9 +14,9 @@
 	} = $props();
 
 	function onPageChange(newPage: number) {
-		const url = new URL(page.url);
+		const url = new URL(page.url.toString());
 		url.searchParams.set('page', String(newPage));
-		goto(url.toString(), { keepFocus: false, noScroll: false });
+		goto(url);
 	}
 </script>
 

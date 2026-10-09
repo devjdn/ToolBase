@@ -1,13 +1,13 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog/index';
-	import * as Tooltip from '$lib/components/ui/tooltip/index';
+	import * as Dialog from '#lib/components/ui/dialog/index.js';
+	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
 	import { Button } from '../ui/button/index';
 	import { Copy, Check, MoveUpRight } from '@lucide/svelte/icons';
 	import { scale } from 'svelte/transition';
 	import DeleteToolButton from '../delete-tool/DeleteToolButton.svelte';
 	import EditToolDialog from '../edit-tool/EditToolDialog.svelte';
 	import { page } from '$app/state';
-	import { selectedTool } from '$lib/stores/global-tool-dialog';
+	import { selectedTool } from '#lib/stores/global-tool-dialog.js';
 	import ReportToolDialog from '../report-tool-dialog/ReportToolDialog.svelte';
 
 	let open = $state(false);

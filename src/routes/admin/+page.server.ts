@@ -1,5 +1,5 @@
-import { db } from '$lib/server/db';
-import { categories, reports, tools, user } from '$lib/server/db/schema';
+import { db } from '#lib/server/db/index.js';
+import { categories, reports, tools, user } from '#lib/server/db/schema.js';
 import { redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 

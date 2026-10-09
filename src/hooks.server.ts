@@ -1,6 +1,6 @@
-import type { Handle } from '@sveltejs/kit';
-import { building } from '$app/environment';
-import { auth } from '$lib/server/auth';
+import { type Handle, sequence } from '@sveltejs/kit/hooks';
+import { building } from '$app/env';
+import { auth } from '#lib/server/auth';
 import { svelteKitHandler } from 'better-auth/svelte-kit';
 
 const handleBetterAuth: Handle = async ({ event, resolve }) => {
@@ -9,4 +9,18 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 	return svelteKitHandler({ event, resolve, auth, building });
 };
 
-export const handle: Handle = handleBetterAuth;
+const handlePreload: Handle = async ({ event, resolve }) => {
+	return resolve(event, {
+		preload: (input) => {
+			if (input.type === 'js' || input.type === 'css') return true;
+
+			if (input.type === 'font') {
+				return input.filename.startsWith('src/lib/fonts/') && input.filename.endsWith('.woff2');
+			}
+
+			return false;
+		}
+	});
+};
+
+export const handle: Handle = sequence(handleBetterAuth, handlePreload);
