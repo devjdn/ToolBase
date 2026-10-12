@@ -11,9 +11,8 @@
 </script>
 
 <Sidebar.Root bind:ref class="top-(--header-height) h-[calc(100svh-var(--header-height))]!" {...restProps}>
-	<Sidebar.Content>
+	<Sidebar.Content class="pt-1.5">
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Core</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
 					<Sidebar.MenuItem>
@@ -56,8 +55,10 @@
 											<span
 												class={clsx('ml-auto text-xs text-neutral-400 tabular-nums', {
 													'text-white dark:text-black': page.url.pathname === `/category/${category.slug}`
-												})}>{category.toolCount}</span
+												})}
 											>
+												{category.toolCount}
+											</span>
 										</a>
 									{/snippet}
 								</Sidebar.MenuButton>

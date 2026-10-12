@@ -142,7 +142,7 @@
 		</div>
 		<SearchResults {results} {isLoading} />
 
-		<Dialog.Footer class="justify-between! border-t bg-muted px-4 py-5">
+		<Dialog.Footer class="justify-between! border-t bg-muted px-4 py-5 not-md:hidden">
 			<div>
 				<p class="text-sm text-muted-foreground">
 					<Kbd.Group>
@@ -157,7 +157,7 @@
 				<p class="text-sm text-muted-foreground">
 					<Kbd.Root>↵</Kbd.Root>
 
-					Open tool in dialog
+					Open
 				</p>
 			</div>
 		</Dialog.Footer>

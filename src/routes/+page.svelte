@@ -14,7 +14,7 @@
 
 <div class="@container mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
 	<section class="category-header">
-		<h1 class="text-[clamp(1.8rem,1.1rem+2vw,2rem)] font-semibold tracking-tight">Home</h1>
+		<h1>Home</h1>
 	</section>
 
 	<svelte:boundary>
@@ -27,7 +27,7 @@
 			</div>
 		{:else}
 			<section class="tools-section flex-1">
-				<ul class="grid grid-cols-2 gap-x-4 gap-y-6 @3xl:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5">
+				<ul class="card-grid">
 					{#each tools as tool (tool.id)}
 						<li>
 							<ToolCard {tool} showCategory />

@@ -167,16 +167,25 @@
 		@apply border-border outline-ring/50;
 	}
 	body {
-		@apply bg-background tracking-tight text-foreground selection:bg-primary selection:text-primary-foreground;
+		@apply bg-background text-foreground selection:bg-primary selection:text-primary-foreground;
 		font-feature-settings: 'zero' 1;
 	}
 	html {
-		@apply font-sans;
-	}
-	html,
-	body {
 		@apply overscroll-y-none;
 	}
+
+	h1 {
+		@apply text-[clamp(1.8rem,1.1rem+2vw,2rem)] font-bold tracking-tight;
+	}
+
+	a > span,
+	button > span {
+		padding-block-start: 2px;
+	}
+}
+
+@utility card-grid {
+	@apply grid grid-cols-2 gap-x-4.5 gap-y-4.5 @3xl:grid-cols-3 @3xl:gap-y-6 @4xl:grid-cols-4 @6xl:grid-cols-5;
 }
 
 @keyframes progress {

@@ -13,7 +13,7 @@
 
 <div class="@container mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
 	<section class="category-header">
-		<h1 class="text-[clamp(1.8rem,1.1rem+2vw,2rem)] font-semibold tracking-tight">Admin Dashboard</h1>
+		<h1>Admin Dashboard</h1>
 	</section>
 
 	<section class="flex flex-1 flex-col gap-2">

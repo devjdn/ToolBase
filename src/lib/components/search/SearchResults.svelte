@@ -152,10 +152,10 @@
 			</div>
 		{/each}
 	{:else}
-		<div class="flex size-full flex-col items-center justify-center gap-1 leading-tight">
-			<p class="text-sm font-medium">No matches found</p>
+		<div class="flex size-full flex-col items-center justify-center gap-1 text-center leading-tight">
+			<p class="text-sm font-medium tracking-[-0.02em]">No matches found</p>
 			<p class="max-w-prose text-xs text-muted-foreground">
-				Try a different term related to your search. If a tool is missing, feel free to add it to ToolBase.
+				Try a different term related to your search. <br /> If a tool is missing, feel free to add it to ToolBase.
 			</p>
 		</div>
 	{/if}

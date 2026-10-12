@@ -4,7 +4,7 @@
 
 <div class="@container mx-auto flex w-full max-w-prose flex-1 flex-col space-y-10 text-base">
 	<section class="space-y-4">
-		<h1 class="text-[clamp(1.8rem,1.1rem+2vw,2rem)] font-semibold tracking-tight">ToolBase Usage Guide</h1>
+		<h1 class="">ToolBase Usage Guide</h1>
 		<div class="space-y-4">
 			<p>
 				ToolBase is entirely reliant on people adding content to the platform, allowing users to have an easier way of

@@ -1,6 +1,6 @@
 import { query, command, form } from '$app/server';
 import { z } from 'zod';
-import { count, desc, eq } from 'drizzle-orm';
+import { and, count, desc, eq } from 'drizzle-orm';
 import { db } from '#lib/server/db/index.js';
 import { tools, categories } from '#lib/server/db/schema.js';
 import { requireRole, requireUser } from '#lib/server/guards.js';
@@ -10,40 +10,59 @@ import { addToolFormSchema, editToolFormSchema } from '#lib/zod-schemas.js';
 
 const PAGE_SIZE = 24;
 
-export const getTools = query(z.object({ page: z.number().int().min(1) }), async ({ page }) => {
-	const published = eq(tools.status, 'published');
+export const getTools = query(
+	z.object({
+		page: z.number().int().min(1),
+		slug: z.string().optional()
+	}),
+	async ({ page, slug }) => {
+		let category: typeof categories.$inferSelect | undefined;
 
-	const [rows, [{ total }]] = await Promise.all([
-		db
-			.select({
-				id: tools.id,
-				name: tools.name,
-				url: tools.url,
-				description: tools.description,
-				logoUrl: tools.logoUrl,
-				createdAt: tools.createdAt,
-				updatedAt: tools.updatedAt,
-				category: {
-					id: categories.id,
-					name: categories.name,
-					color: categories.color,
-					slug: categories.slug
-				}
-			})
-			.from(tools)
-			.leftJoin(categories, eq(tools.categoryId, categories.id))
-			.where(published)
-			.orderBy(desc(tools.createdAt))
-			.offset((page - 1) * PAGE_SIZE)
-			.limit(PAGE_SIZE),
-		db.select({ total: count() }).from(tools).where(published)
-	]);
+		if (slug) {
+			[category] = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
 
-	return {
-		tools: rows,
-		pagination: { page, pageSize: PAGE_SIZE, totalPages: Math.ceil(Number(total) / PAGE_SIZE) }
-	};
-});
+			if (!category) error(404, 'Category not found.');
+		}
+
+		const where = and(eq(tools.status, 'published'), category ? eq(tools.categoryId, category.id) : undefined);
+
+		const [rows, [{ total }]] = await Promise.all([
+			db
+				.select({
+					id: tools.id,
+					name: tools.name,
+					url: tools.url,
+					description: tools.description,
+					logoUrl: tools.logoUrl,
+					createdAt: tools.createdAt,
+					updatedAt: tools.updatedAt,
+					category: {
+						id: categories.id,
+						name: categories.name,
+						color: categories.color,
+						slug: categories.slug
+					}
+				})
+				.from(tools)
+				.leftJoin(categories, eq(tools.categoryId, categories.id))
+				.where(where)
+				.orderBy(desc(tools.createdAt))
+				.offset((page - 1) * PAGE_SIZE)
+				.limit(PAGE_SIZE),
+			db.select({ total: count() }).from(tools).where(where)
+		]);
+
+		return {
+			category: category ?? null,
+			tools: rows,
+			pagination: {
+				page,
+				pageSize: PAGE_SIZE,
+				totalPages: Math.ceil(Number(total) / PAGE_SIZE)
+			}
+		};
+	}
+);
 
 export const addTool = form(addToolFormSchema, async (data, issue) => {
 	await requireUser();
@@ -76,7 +95,7 @@ export const addTool = form(addToolFormSchema, async (data, issue) => {
 });
 
 export const editTool = form(editToolFormSchema, async (data, issue) => {
-	await requireRole(['editor', 'admin']);
+	await requireRole(['admin']);
 
 	const [existing] = await db.select({ logoUrl: tools.logoUrl }).from(tools).where(eq(tools.id, data.id)).limit(1);
 	if (!existing) {
@@ -117,7 +136,7 @@ export const editTool = form(editToolFormSchema, async (data, issue) => {
 });
 
 export const deleteTool = command(z.string(), async (id) => {
-	await requireRole(['editor', 'admin']);
+	await requireRole(['admin']);
 
 	const [tool] = await db
 		.select({

@@ -43,9 +43,9 @@
 			</Dialog.Header>
 			<div class="flex flex-col gap-12">
 				<div class="flex flex-col gap-1.5">
-					<p class="text-xs text-muted-foreground md:text-sm">Description</p>
+					<p class="text-xs text-muted-foreground md:text-sm md:tracking-[-0.02em]">Description</p>
 					{#if $selectedTool.description}
-						<p class="max-w-prose text-sm wrap-break-word md:text-base">
+						<p class="max-w-prose text-sm tracking-[-0.02em] wrap-break-word md:text-base">
 							{$selectedTool.description}
 						</p>
 					{/if}
@@ -95,14 +95,13 @@
 						</Tooltip.Content>
 					</Tooltip.Root>
 
-					{#if page.data.user && ['editor', 'admin'].includes(page.data.user?.role ?? '')}
+					{#if page.data.user && ['admin'].includes(page.data.user?.role ?? '')}
 						<EditToolDialog tool={$selectedTool} />
 						<DeleteToolButton {open} tool={$selectedTool} />
 					{/if}
 
 					<ReportToolDialog tool={$selectedTool} />
 				</div>
-				<!-- implement images here when done, do an if statement as well -->
 			</div>
 		</Dialog.Content>
 	{/if}

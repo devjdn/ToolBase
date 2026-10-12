@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '#lib/server/db/index.js';
 import { and, eq, ilike, or } from 'drizzle-orm';
@@ -7,7 +6,7 @@ import { tools, categories } from '#lib/server/db/schema.js';
 export const GET: RequestHandler = async ({ url }) => {
 	const q = url.searchParams.get('q')?.trim();
 
-	if (!q || q.length < 2) return json([]);
+	if (!q || q.length < 2) return Response.json([]);
 
 	const [toolResults, categoryResults] = await Promise.all([
 		db
@@ -42,7 +41,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			.limit(3)
 	]);
 
-	return json({
+	return Response.json({
 		toolResults,
 		categoryResults
 	});
