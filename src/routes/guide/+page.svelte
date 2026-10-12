@@ -48,7 +48,7 @@
 				<li>Description (optional)</li>
 				<li>URL</li>
 				<li>Category</li>
-				<li>Logo (optional) (*Only SVGs under 50KB are accepted)</li>
+				<li>Logo (optional) [*Only WEBP/SVG below 50KB are accepted]</li>
 			</ul>
 			<p>
 				Once you have filled out the form, you can simply click the "Add Tool" button at the bottom of the form to

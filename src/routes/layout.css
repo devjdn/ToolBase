@@ -182,6 +182,11 @@
 	button > span {
 		padding-block-start: 2px;
 	}
+
+	p,
+	li {
+		letter-spacing: -0.02em;
+	}
 }
 
 @utility card-grid {
